@@ -8,6 +8,21 @@
         $(document).ready(function(){		
         	var socket = io.connect("http://127.0.0.1:5000");
 
+
+		socket.on('subscribed', function(obj) {
+			var logStr = 'Subscribed?: ' + obj.data
+			console.log(logStr)
+			$('#subscribeTxt').val(logStr)
+		});
+		
+		socket.on('new data notified', function(obj) {						
+			console.log(obj.data)
+			$('#subscribeTxt').val(obj.data)
+		});
+		
+		
+
+			
 		socket.on('connect', function() {
 			socket.emit('value changed', {data: 'New value'})
 			socket.send('Some text')
@@ -15,6 +30,11 @@
 
 		socket.on('update value', function(obj) {
 			$('#timer').val(obj.data)
+		});
+		
+		
+		$('#subscribeBtn').click(function() {
+			socket.emit('subscribe')
 		});
 		
 		$('#updateBtn').click(function() {
@@ -36,6 +56,8 @@
     <input id="txt1" type="text" />
     <button id="updateBtn">Update</button>
     <input id="timer" type="text" />    
-    <button id="startBtn">Start</button>
+    <button id="startBtn">Start</button><br/>
+    <input id="subscribeTxt" type="text" />
+    <button id="subscribeBtn">Subscribe</button>
 </body>
 </html>
