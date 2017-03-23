@@ -1,2 +1,2 @@
-cd contiki/tools/cooja/
+cd ~/contiki/tools/cooja/
 ant run
