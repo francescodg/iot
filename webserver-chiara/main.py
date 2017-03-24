@@ -35,5 +35,10 @@ def test_message(message):
 def index():
     return '<h1>Hello world</h1>'
 
+
+@app.route('/temperature/average')
+def get_average_temperature():
+        return '128'
+
 if __name__ == "__main__":
     socketio.run(app, debug=True)
