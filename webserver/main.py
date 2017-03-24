@@ -49,6 +49,31 @@ def monitor():
 			socketio.emit('new data notified', {'data': str(content)})
 	return '', 204
 
+@app.route("/delete")
+def delete_content_instance():
+	headers = {
+		'X-M2M-Origin': 'admin:admin',
+		'Accept': 'application/json',
+		'Content-Type': 'application/json'
+	}
+	uri = request.args.get('uri')
+	if uri:
+		r = requests.delete("http://127.0.0.1:8282/~" + uri, headers=headers)
+		return 'Deleted? ' + str(r.status_code)
+	else:
+		return 'No URI specified', 404
+
+@app.route("/retrieve")
+def retrieve_container_instance():
+	headers = {
+		'X-M2M-Origin': 'admin:admin',
+		'Accept': 'application/json',
+		'Content-Type': 'application/json'
+	}
+	r = requests.get("http://127.0.0.1:8282/~" + "/mn-cse/mn-name/TempApp/DATA", params={'fu': '1', 'rty': '4'}, headers=headers)
+	contentInstances = r.json()['m2m:uril'].split(' ')[1:]
+	return json.dumps({'contentInstances': contentInstances})
+
 def timer():
     socketio.emit('update value', {'data': str(datetime.datetime.now())})
     threading.Timer(1, timer).start()    
