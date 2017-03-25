@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html ng-app="GreenHouseApp" lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Temperature Sensors</title>
+    <!-- <link rel="stylesheet" href="style.css"> -->
+    <link rel="stylesheet" href="assets/css/bootstrap.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>
+    <script src="assets/js/m2m.js"></script>
+  </head>
+  <body ng-controller="GreenHouseController">
+    <div class="container center-block">
+      <div class="row">
+	    <div class="well col-md-4" ng-repeat="reading in readings">
+	      <div>
+		Sensore {{ $index + 1 }}: {{ reading.toFixed(1) }} °C
+	      </div>
+	    </div>
+      </div>
+    </div>
+  </body>
+</html>
