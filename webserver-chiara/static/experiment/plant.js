@@ -13,11 +13,13 @@ function Shader() {
     $.container = new createjs.Container();
     $.container.addChild(window, $.shutters);
 
-    $.container.x = 150;
-    $.container.y = 100;
+    $.container.x = 200;
+    $.container.y = 200;
 
     $.container.scaleX = 0.8;
     $.container.scaleY = 0.8;
+
+    window.shadow = new createjs.Shadow("#000000", 0, 0, 10);
 
     this.setOpening = function(level) {
 	$.shutters.y = level * (-window.image.height);
@@ -29,8 +31,8 @@ function Led() {
     $.status = false;
     
     var data = {
-	images: ["assets/off.png", "assets/on.png"],
-	frames: {width: 100, height: 100},
+	images: ["assets/water_off.png", "assets/water_on.png"],
+	frames: {width: 360, height: 280},
 	animations: {
 	    off: 0,
 	    on: 1
@@ -38,6 +40,11 @@ function Led() {
     };
 
     $.button = new createjs.Sprite(new createjs.SpriteSheet(data), "on")
+
+    $.button.scaleX = 0.4;
+    $.button.scaleY = 0.4;
+
+    $.button.shadow = new createjs.Shadow("#000000", 0, 0, 10);
 
     this.update = function() {
 	if ($.status)
