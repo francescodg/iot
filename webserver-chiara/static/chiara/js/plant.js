@@ -19,7 +19,7 @@ function Shader() {
     $.container.scaleX = 1;
     $.container.scaleY = 1;
 
-    window.shadow = new createjs.Shadow("#000000", 0, 0, 10);
+    window.shadow = new createjs.Shadow("#FFFFFF", 0, 0, 10);
 
     this.setOpening = function(level) {
 	$.shutters.y = level * (-window.image.height);
@@ -41,9 +41,10 @@ function Led() {
 
     $.button = new createjs.Sprite(new createjs.SpriteSheet(data), "on")
 
-    $.button.scaleX = 0.4;
-    $.button.scaleY = 0.4;
+    $.button.scaleX = 0.3;
+    $.button.scaleY = 0.3;
 
+    // Green #27c00a
     $.button.shadow = new createjs.Shadow("#000000", 0, 0, 10);
 
     this.update = function() {
@@ -73,21 +74,30 @@ function Led() {
     }
 }
 
-function Plant() {
+function HumidityPlant() {
     var $ = this;
 
     this.init = function(id) {
 	$.stage = new createjs.Stage(id);
-
-	$.leds = [new Led(), new Led(), new Led()]
+	$.stage.addChild(new createjs.Bitmap("assets/img/Serra_iot.png"))
+	$.leds = [new Led(), new Led(), new Led(), new Led()]
 
 	for (var led in $.leds)
 	    initLed(led)
+
+	$.leds[0].button.x = 350;
+	$.leds[0].button.y = 120;
+	$.leds[0].button.scaleX *= -1;
 	
-	$.shader = new Shader()
-	$.stage.addChild($.shader.container)
-	
-	shutters()
+	$.leds[1].button.x = 639;
+	$.leds[1].button.y = 120;
+
+	$.leds[2].button.x = 350;
+	$.leds[2].button.y = 330;
+	$.leds[2].button.scaleX *= -1;
+
+	$.leds[3].button.x = 639;
+	$.leds[3].button.y = 330;
     }
 
     this.update = function() {
@@ -96,23 +106,11 @@ function Plant() {
 	$.stage.update()
     }
 
-    this.setOpeningShaders = function(value) {
-	$.shader.setOpening(value)
-	console.log(value)
-	$.stage.update()
-    }
-
     function initLed(i) {
 	var led = $.leds[i]
-	led.button.x = i * 200 + 100;
-	led.button.y = 100;
 	$.stage.addChild(led.button)
 	led.onClickListener(function() {
 	    $.update()
 	});
-    }
-
-    function shutters() {
-	$.shader.setOpening(0.8)
     }
 }

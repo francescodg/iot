@@ -1,12 +1,10 @@
 <!DOCTYPE html>
-<html ng-app="GreenHouseApp" lang="en">
-
-  <head>
-    <meta charset="utf-8">
-    <title>Brightness Sensors</title>
-    <!-- <link rel="stylesheet" href="style.css"> -->
-	
-    <link rel="stylesheet" href="assets/css/bootstrap.css">
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>Morris.js charts - simple examples</title>
+  
+	<link rel="stylesheet" href="assets/css/bootstrap.css">
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>
     <script src="assets/js/m2m.js"></script>
 	
@@ -42,9 +40,20 @@
       <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
 	
-  </head>
-  <body ng-controller="GreenHouseController">
+	<link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css'>
+	<link rel='stylesheet prefetch' href='https://cdn.oesmith.co.uk/morris-0.5.1.css'>
+
+    <link rel="stylesheet" href="assets/css/style.css">
+
   
+</head>
+
+<body>
+	<head>
+		<meta charset=utf-8 />
+		<title>Humidity Sensors Graph</title>
+	</head>
+
 	<header>
 		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 			<div class="container">
@@ -63,7 +72,7 @@
 				</div>
 				<div class="collapse navbar-collapse navbar-ex1-collapse">
 					<ul class="nav navbar-nav navbar-right">
-						<li><a href="graph_brightness_sensors.html">Graph Value</a>
+						<li><a href="brightness_sensors.html">Humidity Sensor Value</a>
 						</li>
 						<!--<li><a href="#list-page">GreenHouse List</a>
 						</li>
@@ -88,23 +97,55 @@
   
 	<div style="margin-top: 3em" class="row text-center">
 		<div class="col-md-8 col-md-offset-2">
-			<h2><i class="fa fa-list-alt"></i>&nbsp;Brightness Sensors</h2>
+			<h2><i class="fa fa-area-chart"></i>&nbsp;Humidity Sensors Graph</h2>
 		</div>
 	</div>
 	
-	
 	<div class="container center-block">
 	  <div class="row">
-		<div class="col-md-4" ng-repeat="reading in readings">
+		<div class="col-md-12" ng-repeat="reading in readings">
 			<div class="well well-sm">
 				<div class="text-center">
-					<div class="fa fa-sun-o fa-4x main-color"></div>
-					<div style="margin-top: .5em; margin-bottom: .5em;">Sensore {{ $index + 1 }}</div>
-					<div style="font-size: 1.5em">{{ reading.toFixed(1) }} %</div>
+					<label class="label label-success">Line Chart</label>
+					<div id="line-chart"></div>
 				</div>
 			</div>
 	    </div>
       </div>
     </div>
-  </body>
+	
+	
+	
+	
+  <div class"row">
+    <!--<div class="col-sm-6 text-center">
+      <label class="label label-success">Area Chart</label>
+      <div id="area-chart" ></div>
+    </div>
+    <div class="col-sm-6 text-center">
+       <label class="label label-success">Line Chart</label>
+      <div id="line-chart"></div>
+    </div>
+    <div  class="col-sm-6 text-center">
+       <label class="label label-success">Bar Chart</label>
+      <div id="bar-chart" ></div>
+    </div>
+    <div class="col-sm-6 text-center">
+       <label class="label label-success">Bar stacked</label>
+      <div id="stacked" ></div>
+    </div>
+    <div class="col-sm-6 col-sm-offset-3 text-center">
+       <label class="label label-success">Pie Chart</label>
+      <div id="pie-chart" ></div>
+    </div>-->
+    
+  </div>
+</body>
+  <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.2/raphael-min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.0/morris.min.js'></script>
+
+    <script src="assets/js/index.js"></script>
+
+</body>
 </html>
