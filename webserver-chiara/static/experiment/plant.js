@@ -2,14 +2,24 @@
 function Led() {
     var $ = this;
     $.status = false;
-    $.shape = new createjs.Shape();
+
+    var data = {
+	images: ["assets/off.png", "assets/on.png"],
+	frames: {width: 100, height: 100},
+	animations: {
+	    off: 0,
+	    on: 1
+	}
+    };
+
+    var spriteSheet = new createjs.SpriteSheet(data);
+    $.button = new createjs.Sprite(spriteSheet, "on")
 
     this.update = function() {
 	if ($.status)
-	    color = "green"
+	    $.button.gotoAndStop("on")
 	else
-	    color = "red"
-	$.shape.graphics.beginFill(color).drawCircle(0, 0, 20).endFill()
+	    $.button.gotoAndStop("off")
     }
 
     this.turnOn = function() {
@@ -25,7 +35,7 @@ function Led() {
     }
 
     this.onClickListener = function(callback) {
-	$.shape.addEventListener("click", function(event) {
+	$.button.addEventListener("click", function(event) {
 	    $.toggle()
 	    callback()
 	});
@@ -43,9 +53,9 @@ function Plant() {
 	for (var i = 0; i < $.leds.length; i++) {
 	    // Init led
 	    var led = $.leds[i]
-	    led.shape.x = i * 50 + 100;
-	    led.shape.y = 100;
-	    $.stage.addChild(led.shape)
+	    led.button.x = i * 200 + 100;
+	    led.button.y = 100;
+	    $.stage.addChild(led.button)
 	    led.onClickListener(function() {
 		$.update()
 	    });
