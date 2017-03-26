@@ -642,7 +642,39 @@
 							<li>
 							</li>
 							<li ></li><br>
-							<li class="main-price bottom">
+							<li class="">
+							  <div class="row">
+							    <div class="col-md-6">
+							      <div id="range-shader-0" style="width: 14.5em; margin-top: 2em; margin-left: 7em;"></div>
+							      <script>
+							      $(document).ready(function() {
+							        $("#range-shader-0").asRange({
+												step: 0.1,
+												range: false,
+												min: 0,
+												max: 1,
+							      value: 0,
+							      onChange: function(value) { onShaderChangeValue(0, value); }
+											  });
+											});
+							      </script>
+							    </div>
+							    <div class="col-md-6">
+							      <div id="range-shader-1" style="width: 14.5em; margin-top: 2em; margin-left: 7em;"></div>
+							      <script>
+							      $(document).ready(function() {
+							        $("#range-shader-1").asRange({
+												step: 0.1,
+												range: false,
+												min: 0,
+												max: 1,
+							      value: 0,
+							      onChange: function(value) { onShaderChangeValue(1, value); }
+											  });
+											});
+							      </script>
+							    </div>
+							  </div>
                             </li>
 							<li ></li>
                         </ul>
@@ -764,6 +796,11 @@
 
 	  	shaderPlant = new ShaderPlant("shaderPlant")
 	  	shaderPlant.update()
+	  }
+
+	  function onShaderChangeValue(id, value) {
+	  	shaderPlant.shaders[id].setOpening(value)
+		shaderPlant.update()	  
 	  }
 	</script>
 

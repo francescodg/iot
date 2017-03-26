@@ -129,9 +129,6 @@ function ShaderPlant(id) {
     $.stage.addChild($.shaders[0].container)
     $.stage.addChild($.shaders[1].container)
     
-    $.shaders[0].setOpening(Math.random())
-    $.shaders[1].setOpening(Math.random())
-
     this.update = function() {
 	$.stage.update()
     }
