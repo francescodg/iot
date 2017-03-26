@@ -5,7 +5,7 @@ function Shader() {
     var window = new createjs.Bitmap("assets/window.png");
     $.shutters = new createjs.Bitmap("assets/shutter.png");
 
-    $.shutters.x += 0.5; // Needed for graphics, do not change
+    $.shutters.x += 0.2; // Needed for graphics, do not change
 
     $.shutters.mask = new createjs.Shape()
     $.shutters.mask.graphics.drawRect(0, 0, window.image.width, window.image.height);
@@ -13,13 +13,10 @@ function Shader() {
     $.container = new createjs.Container();
     $.container.addChild(window, $.shutters);
 
-    $.container.x = 200;
-    $.container.y = 200;
-
-    $.container.scaleX = 1;
-    $.container.scaleY = 1;
-
-    window.shadow = new createjs.Shadow("#FFFFFF", 0, 0, 10);
+    $.container.scaleX = 1.2;
+    $.container.scaleY = 1.2;
+    
+    window.shadow = new createjs.Shadow("#000000", 0, 0, 10);
 
     this.setOpening = function(level) {
 	$.shutters.y = level * (-window.image.height);
@@ -112,5 +109,30 @@ function HumidityPlant() {
 	led.onClickListener(function() {
 	    $.update()
 	});
+    }
+}
+
+function ShaderPlant(id) {
+    var $ = this;
+
+    $.stage = new createjs.Stage(id);
+    $.stage.addChild(new createjs.Bitmap("assets/img/Serra_iot.png"))
+
+    $.shaders = [new Shader(), new Shader()]
+
+    $.shaders[0].container.x = 112;
+    $.shaders[0].container.y = 134;
+
+    $.shaders[1].container.x = 762;
+    $.shaders[1].container.y = 134;
+
+    $.stage.addChild($.shaders[0].container)
+    $.stage.addChild($.shaders[1].container)
+    
+    $.shaders[0].setOpening(Math.random())
+    $.shaders[1].setOpening(Math.random())
+
+    this.update = function() {
+	$.stage.update()
     }
 }
