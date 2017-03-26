@@ -790,6 +790,12 @@
 
 
 	  function init() {
+	  window.setTimeout(start, 500)
+	  // $(window).on("load", start);
+	  // $(document).ready(start)
+	  }
+
+	  function start() {
 	  	humidityPlant = new HumidityPlant()
       	  	humidityPlant.init("humidityPlant")
 	      	humidityPlant.update()
