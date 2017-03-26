@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="../js/easeljs-0.8.2.min.js"></script>
+    <script src="plant.js"></script>
+  </head>
+  <body onload="init()">
+    <canvas id="canvas" width="600" height="300"></canvas>
+    <button onclick="showCircle()">Show Circle</button>
+
+    <script type="text/javascript">
+      function init() {
+      	plant = new Plant()
+      	plant.init("canvas")
+      }
+
+      function showCircle() {
+      	plant.showCircle()
+      	plant.update()
+
+      	console.log(plant)
+      }
+
+      function changeColor() {
+      	plant.changeColor()
+      	plant.update()
+      }
+    </script>
+  </body>
+</html>

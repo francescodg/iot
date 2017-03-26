@@ -26,16 +26,17 @@ $(document).ready(function() {
             $(this).industrial(words[index]);
         });
     }, 4000);
-
+	
     // Also init our introjs!
     $("#start_intro").click(function() {
         introJs().start();
     });
 	
-    getAverageTemperature(function(avgTemp) {
-	var maxVal = 255;
-	percentage = avgTemp / maxVal * 100;	
-	$('.avgTempValue').text(Number(avgTemp).toFixed(1) + " °C")
-	$('#avgTempInd').industrial(percentage)
-    });
+	$.get('/temperature/average', function(data) { 
+		var maxVal = 255;
+		percentage = data / maxVal * 100;
+		
+		$('.avgTempValue').text(Number(data).toFixed(2) + " °C")
+		$('#avgTempInd').industrial(percentage)
+	});
 });

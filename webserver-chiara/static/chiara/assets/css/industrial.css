@@ -629,6 +629,7 @@
 	width: -o-calc(25px * 4);
 	width: -ms-calc(25px * 4);
 	width: calc(25px * 4);
+	margin-top: 17px;
 }
 
 .industrial.gauge.size.one {
