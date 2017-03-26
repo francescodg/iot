@@ -1,11 +1,32 @@
+function Shader() {
+    var $ = this;
+    $.status = 100;
 
+    var window = new createjs.Bitmap("assets/window.png");
+    $.shutters = new createjs.Bitmap("assets/shutter.png");
+
+    $.shutters.x += 1; // Needed for graphics, do not change
+
+    $.shutters.mask = new createjs.Shape()
+    $.shutters.mask.graphics.drawRect(0, 0, window.image.width, window.image.height);
+
+    $.container = new createjs.Container();
+    $.container.addChild(window, $.shutters);
+
+    $.container.x = 150;
+    $.container.y = 100;
+
+    $.container.scaleX = 0.8;
+    $.container.scaleY = 0.8;
+
+    this.setOpening = function(level) {
+	$.shutters.y = level * (-window.image.height);
+    }
+}
 
 function Led() {
     var $ = this;
     $.status = false;
-
-    var offBitmap = new createjs.Bitmap("assets/off.png");
-    var onBitmap = new createjs.Bitmap("assets/on.png");
     
     var data = {
 	images: ["assets/off.png", "assets/on.png"],
@@ -16,8 +37,7 @@ function Led() {
 	}
     };
 
-    var spriteSheet = new createjs.SpriteSheet(data);
-    $.button = new createjs.Sprite(spriteSheet, "on")
+    $.button = new createjs.Sprite(new createjs.SpriteSheet(data), "on")
 
     this.update = function() {
 	if ($.status)
@@ -56,11 +76,22 @@ function Plant() {
 
 	for (var led in $.leds)
 	    initLed(led)
+	
+	$.shader = new Shader()
+	$.stage.addChild($.shader.container)
+	
+	shutters()
     }
 
     this.update = function() {
 	for (var led in $.leds)
 	    $.leds[led].update()
+	$.stage.update()
+    }
+
+    this.setOpeningShaders = function(value) {
+	$.shader.setOpening(value)
+	console.log(value)
 	$.stage.update()
     }
 
@@ -72,5 +103,9 @@ function Plant() {
 	led.onClickListener(function() {
 	    $.update()
 	});
+    }
+
+    function shutters() {
+	$.shader.setOpening(0.8)
     }
 }
