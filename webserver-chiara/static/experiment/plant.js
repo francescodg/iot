@@ -1,8 +1,12 @@
 
+
 function Led() {
     var $ = this;
     $.status = false;
 
+    var offBitmap = new createjs.Bitmap("assets/off.png");
+    var onBitmap = new createjs.Bitmap("assets/on.png");
+    
     var data = {
 	images: ["assets/off.png", "assets/on.png"],
 	frames: {width: 100, height: 100},
@@ -50,21 +54,23 @@ function Plant() {
 
 	$.leds = [new Led(), new Led(), new Led()]
 
-	for (var i = 0; i < $.leds.length; i++) {
-	    // Init led
-	    var led = $.leds[i]
-	    led.button.x = i * 200 + 100;
-	    led.button.y = 100;
-	    $.stage.addChild(led.button)
-	    led.onClickListener(function() {
-		$.update()
-	    });
-	}
+	for (var led in $.leds)
+	    initLed(led)
     }
 
     this.update = function() {
 	for (var led in $.leds)
 	    $.leds[led].update()
 	$.stage.update()
+    }
+
+    function initLed(i) {
+	var led = $.leds[i]
+	led.button.x = i * 200 + 100;
+	led.button.y = 100;
+	$.stage.addChild(led.button)
+	led.onClickListener(function() {
+	    $.update()
+	});
     }
 }
