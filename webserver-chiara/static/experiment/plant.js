@@ -1,32 +1,60 @@
 
+function Led() {
+    var $ = this;
+    $.status = false;
+    $.shape = new createjs.Shape();
+
+    this.update = function() {
+	if ($.status)
+	    color = "green"
+	else
+	    color = "red"
+	$.shape.graphics.beginFill(color).drawCircle(0, 0, 20).endFill()
+    }
+
+    this.turnOn = function() {
+	$.status = true;
+    }
+
+    this.turnOff = function() {
+	$.status = false
+    }
+
+    this.toggle = function () {
+	$.status = !$.status
+    }
+
+    this.onClickListener = function(callback) {
+	$.shape.addEventListener("click", function(event) {
+	    $.toggle()
+	    callback()
+	});
+    }
+}
+
 function Plant() {
     var $ = this;
 
     this.init = function(id) {
 	$.stage = new createjs.Stage(id);
-    }
 
-    this.update = function() {
-	$.stage.update()
-    }
+	$.leds = [new Led(), new Led(), new Led()]
 
-    this.showCircle = function() {
-	for (var i = 0; i < 3; i++) {
-	    var circle = new createjs.Shape();
-	    var radious = 10;
-	    drawCircle(circle, "blue", 50 * i + 100, 100, radious)
-	    $.stage.addChild(circle)
+	for (var i = 0; i < $.leds.length; i++) {
+	    // Init led
+	    var led = $.leds[i]
+	    led.shape.x = i * 50 + 100;
+	    led.shape.y = 100;
+	    $.stage.addChild(led.shape)
+	    led.onClickListener(function() {
+		$.update()
+	    });
 	}
     }
 
-    this.changeColor = function() {
-	var list = $.stage.children
-	console.log($.stage.children)
-	var child = $.stage.children[0]
-	drawCircle(child, "red", 50 + 100, 100, 10)
-    }
-
-    function drawCircle(circle, color, x, y, radious) {
-	circle.graphics.beginFill(color).drawCircle(x, y, radious).endFill()
+    this.update = function() {
+	for (var led in $.leds)
+	    $.leds[led].update()
+	$.stage.update()
     }
 }
