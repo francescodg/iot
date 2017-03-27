@@ -8,6 +8,7 @@
 	
     <link rel="stylesheet" href="assets/css/bootstrap.css">
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>
+    <script src="../js/m2m.js"></script>
     <script src="assets/js/m2m.js"></script>
 	
 	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
@@ -106,5 +107,13 @@
 	    </div>
       </div>
     </div>
+
+	<script>
+	  function init() {
+	  console.log("init()")
+	  m2m.getTemperatureReadings(function (data){ console.log(data)} )
+      	  // m2m.getTemperatureDataPlot(function(data) { new TemperatureGraph("graph", data) })
+	  }
+	</script>
   </body>
 </html>
