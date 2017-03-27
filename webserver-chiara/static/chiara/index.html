@@ -19,6 +19,7 @@
 	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 
 	<script src="../js/easeljs-0.8.2.min.js"></script>
+	<script src="../js/preloadjs-0.6.2.min.js"></script>
 	<script src="js/plant.js"></script>
 
 	<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
@@ -790,18 +791,30 @@
 
 
 	  function init() {
-	  window.setTimeout(start, 500)
-	  // $(window).on("load", start);
-	  // $(document).ready(start)
+	      var preload = new createjs.LoadQueue(true);
+	  preload.on("progress", function(){ console.log("Loading...") } );
+	  preload.on("complete", function(event){ console.log("Done."); start(event.target); });
+	  preload.addEventListener("error", function(){ console.log("Error loading assets"); });
+	  preload.loadManifest(["assets/img/Serra_iot.png", "assets/water_on.png", "assets/water_off.png", "assets/window.png", "assets/shutter.png"]);
 	  }
 
-	  function start() {
-	  	humidityPlant = new HumidityPlant()
-      	  	humidityPlant.init("humidityPlant")
-	      	humidityPlant.update()
+	  function start(queue) {
 
-	  	shaderPlant = new ShaderPlant("shaderPlant")
-	  	shaderPlant.update()
+	  var assets = {
+	  "background": queue.getResult("assets/img/Serra_iot.png"),
+	  "water_on": queue.getResult("assets/water_on.png"),
+	  "water_off": queue.getResult("assets/water_off.png"),
+	  "window": queue.getResult("assets/window.png"),
+	  "shutters": queue.getResult("assets/shutter.png")
+	  }
+	  
+	  setAssets(assets);
+
+	  humidityPlant = new HumidityPlant("humidityPlant")
+	  humidityPlant.update()
+	  
+	  shaderPlant = new ShaderPlant("shaderPlant")
+	  shaderPlant.update()
 	  }
 
 	  function onShaderChangeValue(id, value) {

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <script src="../js/preloadjs-0.6.2.min.js"></script>
+    <script src="../js/easeljs-0.8.2.min.js"></script>
+    <title>Temperature Sensors</title>
+  </head>
+  <body onload="init()">    
+    <div>
+      
+      <canvas id="canvas" width="600" height="300" style="border: 3px solid black;"></canvas>
+    </div>
+
+    <script type="text/javascript">
+      
+
+var stage;
+var bitmap;
+var preload;
+
+function init() {
+  preload = new createjs.LoadQueue();
+  preload.addEventListener("fileload", function(event){ console.log("Loaded"); start() });
+  preload.addEventListener("error", function(error){ console.log("Error: " + error); });
+  preload.loadManifest(["assets/window.png", "assets/water_on.png"]);
+}
+
+function start(result) {
+stage = new createjs.Stage("canvas")
+var bitmap = new createjs.Bitmap(preload.getResult("assets/window.png"))
+var bitmap2 = new createjs.Bitmap(preload.getResult("assets/water_on.png"))
+stage.addChild(bitmap)
+stage.addChild(bitmap2)
+stage.update()
+}
+
+
+    </script>
+  </body>
+</html>
