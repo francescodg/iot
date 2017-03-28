@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title>Synchronized Sliders</title>
+    <title>Average Temperature</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="libs/js/angular.min.js"></script>
@@ -9,9 +9,6 @@
 </head>
 <body ng-app="app">
   <div ng-controller="appCtrl">
-    <div ng-repeat="temperature in system.temperatureSensors track by $index">
-      Temperature Sensor[{{ $index }}] {{ temperature }}
-    </div>
     <div>
       Average Temperature = {{ system.averageTemperature }}
     </div>
