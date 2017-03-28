@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html ng-app="GreenHouseApp" lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <title>Brightness Sensors</title>
+    <!-- <link rel="stylesheet" href="style.css"> -->
+	
+    <link rel="stylesheet" href="assets/css/bootstrap.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>
+    <script src="assets/js/m2m.js"></script>
+	
+	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+	<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+	<link href="assets/css/asRange.min.css" rel="stylesheet" type="text/css">
+
+    <!--REQUIRED STYLE SHEETS-->
+	<style>
+		h1.huge {
+			font-size: 72pt;
+		}
+		
+		.content-centered {
+			text-align: center;
+		}
+	</style>
+	<link rel="stylesheet" href="assets/css/industrial.css">
+	<link rel="stylesheet" href="assets/css/introjs.min.css">
+	<link rel="stylesheet" href="assets/css/foundation.css">
+    <!-- BOOTSTRAP CORE STYLE CSS -->
+    <link href="assets/css/bootstrap.css" rel="stylesheet" />
+    <!-- FONTAWESOME STYLE CSS -->
+    <link href="assets/css/font-awesome.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="assets/font-awesome-4.7.0/css/font-awesome.min.css">
+    <!-- CUSTOM STYLE CSS -->
+    <link href="assets/css/style.css" rel="stylesheet" />
+    <!-- GOOGLE FONT -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+	
+  </head>
+  <body ng-controller="GreenHouseController">
+  
+	<header>
+		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<!--<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>-->
+					</button>
+					<a class="navbar-brand" href="index.html"><i class="fa fa-leaf" aria-hidden="true"></i>IOT - GREENHOUSE </a>
+				</div>
+				<div class="collapse navbar-collapse navbar-ex1-collapse">
+					<ul class="nav navbar-nav navbar-right">
+						<li><a href="graph_brightness_sensors.html">Graph Value</a>
+						</li>
+						<!--<li><a href="#list-page">GreenHouse List</a>
+						</li>
+
+						<li><a href="#services-page">General Overview</a>
+						</li>
+
+						<li><a href="#heating-page">Heating</a>
+						</li>
+						
+						<li><a href="#nebulizer-page">Nebulizer</a>
+						</li>
+						<li><a href="#shading-page">Shading</a>
+						</li>
+						<li><a href="#contact-page">Contact</a>
+						</li>-->
+					</ul>
+				</div>
+			</div>
+		</nav>
+    </header>
+  
+	<div style="margin-top: 3em" class="row text-center">
+		<div class="col-md-8 col-md-offset-2">
+			<h2><i class="fa fa-list-alt"></i>&nbsp;Brightness Sensors</h2>
+		</div>
+	</div>
+	
+	
+	<div class="container center-block">
+	  <div class="row">
+		<div class="col-md-4" ng-repeat="reading in readings">
+			<div class="well well-sm">
+				<div class="text-center">
+					<div class="fa fa-sun-o fa-4x main-color"></div>
+					<div style="margin-top: .5em; margin-bottom: .5em;">Sensore {{ $index + 1 }}</div>
+					<div style="font-size: 1.5em">{{ reading.toFixed(1) }} %</div>
+				</div><br>
+				<div>
+					<button type="submit" class="btn btn-success center-block">Clear History</button>
+				</div>
+			</div>
+	    </div>
+      </div>
+    </div>
+  </body>
+</html>

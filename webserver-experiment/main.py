@@ -1,8 +1,10 @@
 from flask import Flask, request
 from flask_socketio import SocketIO
 import random
+import m2m
 
 import threading
+import thread
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -21,20 +23,42 @@ class System:
 
 system = System()
 
+def systemUpdateTemperature(sensorId, value):
+	data = { 'id': sensorId, 'value': value }
+	socketio.emit("new temperature", data)
+	socketio.emit("new average temperature", system.averageTemperature)
+
 def timer():
-    # Update system
-    index = random.randint(0, len(system.temperatureSensors)-1)
-    system.randomUpdate(index)
+  # Update system
+  index = random.randint(0, len(system.temperatureSensors)-1)
+  system.randomUpdate(index)
 
-    data = {
-        'id': index,
-        'value': system.temperatureSensors[index]
-    }
+  data = { 'id': index, 'value': system.temperatureSensors[index] }
+  
+  socketio.emit("new temperature", data)
+  socketio.emit("new average temperature", system.averageTemperature)
 
-    socketio.emit("new temperature", data)
-    socketio.emit("new average temperature", system.averageTemperature)
+  threading.Timer(5, timer).start()
 
-    threading.Timer(5, timer).start()
+def start():
+	thread.start_new_thread(subscribe, ())
+
+def subscribe():
+	resources = ["/Temperature/Temperature_Sensor_0", "/Temperature/Temperature_Sensor_1"]
+	for resource in resources:
+		m2m.subscribe(resource, "/new/temperature")
+	return
+
+@app.route("/new/temperature", methods=["POST"])
+def on_new_temperature():
+	print(request.json)
+	
+	try:
+		(resourceId, value) = m2m.parseNotify(request.json)
+		systemUpdateTemperature(resourceId, value)
+	except ValueError:
+		pass
+	return "", 202
 
 @app.route("/send")
 def send():
@@ -43,7 +67,9 @@ def send():
     return "Send"
 
 if __name__ == "__main__":
-    timer()
-    socketio.run(app, debug=True)
+	# timer()
+	
+	start()
+	socketio.run(app, debug=True, use_reloader=False) # To disable duplicate output (use_reloader=False)
 
 

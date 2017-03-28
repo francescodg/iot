@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+	
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="Serra IOT">
+    
+	<meta name="author" content="CDF Company">
+	
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>IoT-Geen House</title>
+	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+
+	<script src="../js/easeljs-0.8.2.min.js"></script>
+	<script src="js/plant.js"></script>
+
+	<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+	<link href="assets/css/asRange.min.css" rel="stylesheet" type="text/css">
+
+    <!--REQUIRED STYLE SHEETS-->
+	<style>
+		h1.huge {
+			font-size: 72pt;
+		}
+		
+		.content-centered {
+			text-align: center;
+		}
+		
+		.asRange .asRange-selected {
+			    background-color: #27C00A;
+				border-color: #05A250;
+		}
+		
+		.asRange .asRange-pointer:before {
+			background-color: #27C00A;
+			border-color: #05A250;
+			width: 20px;
+			height: 20px;
+			top: -5px;
+			right: -5px;
+			bottom: -5px;
+			left: -5px;
+		}
+		
+		.asRange .asRange-pointer:after {
+			width: 10px;
+			height: 10px;
+			top: 0px;
+			right: 0px;
+			bottom: 0px;
+			left: 0px;
+		}
+		
+		.input-group-btn:first-child > .btn, .input-group-btn:first-child > .btn-group {
+			margin-right: -1px;
+			height: 4em;
+			width: 6em;
+		}
+		
+		.input-group-btn:last-child > .btn, .input-group-btn:last-child > .btn-group {
+			margin-left: -1px;
+			height: 4em;
+			width: 6em;
+		}
+		
+	</style>
+	<link rel="stylesheet" href="assets/css/industrial.css">
+	<link rel="stylesheet" href="assets/css/introjs.min.css">
+	<link rel="stylesheet" href="assets/css/foundation.css">
+    <!-- BOOTSTRAP CORE STYLE CSS -->
+    <link href="assets/css/bootstrap.css" rel="stylesheet" />
+    <!-- FONTAWESOME STYLE CSS -->
+    <link href="assets/css/font-awesome.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="assets/font-awesome-4.7.0/css/font-awesome.min.css">
+    <!-- CUSTOM STYLE CSS -->
+    <link href="assets/css/style.css" rel="stylesheet" />
+    <!-- GOOGLE FONT -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body onload="init()">	
+    <header>
+		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+						<span class="sr-only">Toggle navigation</span>
+						<!--<span class="icon-bar"></span>-->
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="index.html"><i class="fa fa-leaf" aria-hidden="true"></i>IOT - GREENHOUSE </a>
+				</div>
+				<div class="collapse navbar-collapse navbar-ex1-collapse">
+					<ul class="nav navbar-nav navbar-right">
+						<li><a href="#access-page">Home</a>
+						</li>
+						<!--<li><a href="#list-page">GreenHouse List</a>
+						</li>-->
+
+						<li><a href="#services-page">General Overview</a>
+						</li>
+
+						<li><a href="#heating-page">Heating</a>
+						</li>
+						
+						<li><a href="#nebulizer-page">Nebulizer</a>
+						</li>
+						<li><a href="#shading-page">Shading</a>
+						</li>
+						<li><a href="#contact-page">Contact</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+    </header>
+
+    <div id="access-page">
+		<div class="container" >
+			<div class="row ">
+				<div class="col-md-9 col-sm-9">
+					<h1 class="head-main">IoT - GreenHouse</h1>
+					<span class="head-sub-main">Green Sensorized Control Feedback Experience</span>
+					<div class="head-last">
+						C.D.F. Company S.r.l.
+					</div>
+
+				</div>
+				<!--<div class="col-md-3 col-sm-3">
+					   <div class="div-trans text-center">
+						   <h3>Welcome!</h3>
+						   <h4>Digit your Mail and Password.</h4>
+							<form>
+						   
+								<div class="col-md-12 col-sm-12">
+									<div class="form-group">
+										<input type="text" class="form-control" required="required" placeholder="Email address">
+									</div>
+								</div>
+								<div class="col-md-12 col-sm-12">
+									<div class="form-group">
+										<input type="text" class="form-control" required="required" placeholder="Password">
+									</div>
+								</div>
+								<div class="col-md-12 col-sm-12">
+									<div class="form-group">
+										<button type="submit" class="btn btn-success">Login</button>
+									</div>
+								</div>
+						   
+						</form>
+					   </div>
+	   
+				</div>-->
+
+			</div>
+		</div>
+    </div>
+
+    <!--<section  id="list-page">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-8 col-md-offset-2">
+
+                    <h2><i class="fa fa-list-alt" aria-hidden="true"></i>&nbsp;GreenHouse List</h2>
+                    <h4>
+                        <strong>Welcome!
+                        </strong>
+                    </h4>
+					<br>
+					<h5>Please select the greenhouse concerned to proceed to the analysis.</h5>
+                </div>
+            </div>
+            <div class="row text-center">
+
+                    <div class="col-md-9 col-sm-9 col-md-offset-13">
+                        <div class="plan">
+                            <li class="plan-head">GREEN HOUSE LIST</li>
+                            <li>
+								<select style="width: 30em">
+								</select>
+							</li>
+							
+                            <li class="collapse navbar-collapse navbar-ex1-collapse bottom">
+                                <a href="#services-page" class="btn btn-success">Start</a>
+                            </li>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section  id="Parallax-one">
+		<div class="container">
+			<div class="row text-center">
+				<div class="col-md-8 col-md-offset-2 ">
+				</div>
+			</div>
+		</div>
+    </section>-->
+
+    <section  id="services-page">
+        <div class="container">
+          
+            <div class="row text-center">
+                <div class="col-md-8 col-md-offset-2">
+                    <h2><i class="fa fa-eye" aria-hidden="true"></i>&nbsp;General Overview</h2>
+                   
+                </div>
+            </div>
+
+            <div class="row text-center space-pad">
+                <div class="col-md-2 col-sm-2 col-md-offset-1">
+                    <div >
+                         <i class="fa fa-thermometer-three-quarters fa-4x main-color" aria-hidden="true"></i>
+                        <h4>Temperature</h4>
+                        <p class="avgTempValue">
+                            VALUE C°
+                        </p>
+                    </div>
+                </div>
+				
+				<div class="col-md-2 col-sm-2">
+                    <div >
+                         <i class="fa fa-bar-chart fa-4x main-color" aria-hidden="true"></i>
+                        <h4>Pressure Boiler</h4>
+                        <p>
+                            VALUE PSI
+                        </p>
+                    </div>
+                </div>
+				
+                <div class="col-md-2 col-sm-2">
+                    <div >
+                        <i class="fa fa-fire fa-4x main-color"></i>
+                        <h4>Fuel Boiler</h4>
+                        <p>
+							VALUE %
+                        </p>
+                    </div>
+                </div>
+				
+				<div class="col-md-2 col-sm-2">
+                    <div >
+                        <i class="fa fa-tint fa-4x main-color"></i>
+                        <h4>Humidity</h4>
+                        <p>
+                            VALUE %
+                        </p>
+                    </div>
+                </div>
+				
+                <div class="col-md-2 col-sm-2">
+                    <div>
+                        <i class="fa fa-sun-o fa-4x main-color"></i>
+                        <h4>Brightness</h4>
+                        <p>
+                            VALUE %
+                        </p>
+                    </div>
+                </div>
+            </div>
+	</section>
+
+    <section  id="Parallax-one">
+		<div class="container">
+
+            <div class="row text-center">
+                <div class="col-md-8 col-md-offset-2 ">
+                </div>
+            </div>
+
+
+        </div>
+          </section>
+
+		<section  id="services-page">
+            <div class="row ">
+                <div class="col-md-6 col-sm-6">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <ul class="nav nav-pills" style="background-color: #ECECEC;">
+                                <li class="active"><a href="#name-pills" data-toggle="tab">Name</a>
+                                </li>
+                                <li class=""><a href="#address-pills" data-toggle="tab">Address</a>
+                                </li>
+                                <li class=""><a href="#cultivation-pills" data-toggle="tab">Cultivation</a>
+                                </li>
+                                <li class=""><a href="#planimetry-pills" data-toggle="tab">Planimetry</a>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content">
+                                <div class="tab-pane fade  active in" id="name-pills">
+                                    <h4>Green House Name</h4>
+                                    <p>GREEN HOUSE NAME</p>
+                                </div>
+                                <div class="tab-pane fade" id="address-pills">
+                                    <h4>Green House Address</h4>
+                                   <p> GREEN HOUSE ADDRESS (CONCATENATION STRING)</p>
+
+                                </div>
+                                <div class="tab-pane fade" id="cultivation-pills">
+                                    <h4>Type of Cultivation</h4>
+                                     <p>DESCRIPTION</p>
+                                </div>
+                                <div class="tab-pane fade" id="planimetry-pills">
+                                    <h4>Green House Planimetry</h4>
+                                    <p>SHAPE & AREA (CONCATENATION STRING)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+	
+	<section  id="Parallax-one">
+		<div class="container">
+
+            <div class="row text-center">
+                <div class="col-md-8 col-md-offset-2 ">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section  id="heating-page">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-8 col-md-offset-2">
+                    <h2><i class="fa fa-thermometer-three-quarters main-color" aria-hidden="true"></i>&nbsp;Heating</h2>
+                </div>
+            </div>
+			
+            <div class="row text-center">
+                <div class="col-md-12 ">
+                    <div class="col-md-9 col-sm-6">
+                        <ul class="plan">
+                            <li class="plan-head">THERMOSTAT & BOILER PARAMETER</li>
+                            <li>
+								<div class="row text-center space-pad">
+									<div class="col-md-4 col-sm-4">
+										<div>
+											<div class="industrial led size four center-block">
+												<div class="meter red"></div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="col-md-4 col-sm-4">
+										<div>
+											<div class="industrial gauge size one center-block"><span class="ticks" data-amount="21" data-scale-freq="5"></span>
+												<div class="space"></div>
+												<div class="meter"></div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="col-md-4 col-sm-4">
+										<div >
+											<div class="industrial tank size one center-block"> <span class="ticks" data-amount="11" data-scale-freq="5"></span>
+												<div class="space"></div>
+												<div class="meter safe"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="row text-center space-pad">
+									<div class="col-md-4 col-sm-4">
+										<h4 class="text-center"><i class="fa fa-power-off fa-2x main-color" aria-hidden="true"></i>&nbsp;Boiler State</h4>
+										<p class="text-center">
+											VALUE ON/OFF
+										</p>
+									</div>
+									
+									<div class="col-md-4 col-sm-4">
+										<div>
+											<h4 class="text-center"><i class="fa fa-bar-chart fa-2x main-color" aria-hidden="true"></i>&nbsp;Pressure Boiler</h4>
+											<p class="text-center">
+												VALUE PSI
+											</p>
+										</div>
+									</div>
+									
+									<div class="col-md-4 col-sm-4">
+										<div >
+											<h4 class="text-center"><i class="fa fa-fire fa-2x main-color"></i>&nbsp;Fuel Boiler</h4>
+											<p class="text-center">
+												VALUE %
+											</p>
+										</div>
+									</div>
+								</div>
+							</li>
+							<li ></li><br>
+							<li class="main-price bottom">
+								<div class="row space-pad" style="margin-left: 1em">
+									<div class="col-md-4 col-sm-4"><b>
+										Boiler Temperature&nbsp;[C°]
+									</b></div>
+									<div class="col-md-4 col-sm-4">
+										<!--<div class="example">
+										  <div class="range-example-5" style="width: 14.5em; margin-top: .5em"></div>
+										  <script>
+											$(document).ready(function() {
+											  $(".range-example-5").asRange({
+												step: 0.1,
+												range: false,
+												min: 0,
+												max: 100
+											  });
+											});
+										  </script>
+										</div>-->
+										<div style="width: 14.1em" class="form-group">
+											<input id="colorful" style="border-color: #27C00A; background-color: #e9fce8; height: 1.85em; font-size: 30px; font-family: '7segment'; font-style: bold" class="form-control" type="number" value="0" min="0" max="100" />
+										</div>
+									</div>
+									<a href="#contact-sec" style="width: 6em; height: 4em;" class="btn btn-success">
+										<div style="padding: 0.8em">
+											Set
+										</div>
+									</a>
+								</div>
+                            </li>
+							<li ></li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-3 col-sm-6">
+                        <ul class="plan">
+                            <li class="plan-head">HEATING MEASUREMENTS</li> 
+                            <li>
+								<div class="row text-center space-pad">
+									<div class="center-block">
+										<div >
+											<div id="avgTempInd" class="industrial thermometer size one center-block"> <span class="ticks" data-amount="11" data-scale-freq="5"></span>
+												<div class="space"></div>
+												<div class="meter safe"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</li>
+							<li></li>
+							<li class="bottom">
+								<div class="row">
+									<div>
+										<h4 class="text-center"><i class="fa fa-thermometer-three-quarters fa-2x main-color" aria-hidden="true"></i>&nbsp;Average Temperature</h4>
+										<p class="avgTempValue text-center">
+											VALUE C°
+										</p>
+										<div style="margin-top: -1.7em">
+											<a href="temperature_sensors.html" class="btn btn-success">Thermometers List</a><br><br>
+											<a href="graph_temperature_sensors.html" class="btn btn-success">Thermometers Chart</a>
+										</div>
+									</div>
+								</div>
+							</li><br>
+							<li></li>
+							<li></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+	<section  id="Parallax-one">
+		<div class="container">
+
+            <div class="row text-center">
+                <div class="col-md-8 col-md-offset-2 ">
+                </div>
+            </div>
+        </div>
+    </section>
+	
+    <section  id="nebulizer-page">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-8 col-md-offset-2">
+                    <h2><i class="fa fa-tint main-color"></i>&nbsp;Nebulizer</h2>
+                </div>
+            </div>
+			
+			<div class="row text-center">
+                <div class="col-md-12 ">
+                    <div class="col-md-9 col-sm-6">
+                        <ul class="plan">
+                            <li class="plan-head">NEBULIZER CONTROL PANEL</li>
+                            <li>
+								<div class="row text-center space-pad">
+									<div class="col-md-12">
+										<div>
+											<!--<img src="assets/img/Serra_iot.png" style="width: 45em; z-index: 2; border: 2px solid #6F6F6F;">-->
+											<canvas id="humidityPlant" width="979" height="483" style="width: 45em; border: 2px solid #6F6F6F;">
+										</div>
+									</div>
+									
+								</div>
+							</li>
+							<li>
+								
+							</li>
+							<li ></li><br>
+							<li class="main-price bottom">
+                            </li>
+							<li ></li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-3 col-sm-6">
+                        <ul class="plan">
+                            <li class="plan-head">GREENHOUSE HUMIDITY</li> 
+                            <li>
+								<div class="row text-center space-pad">
+									<div class="center-block">
+										<div >
+											<div class="industrial gauge size one center-block"><span class="ticks" data-amount="21" data-scale-freq="5"></span>
+												<div class="space"></div>
+												<div class="meter"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</li>
+							<li></li>
+							<li class="bottom">
+								<div class="row text-center space-pad">
+									<div>
+										<h4 class="text-center"><i class="fa fa-tint fa-2x main-color" aria-hidden="true"></i>&nbsp;Average Humidity</h4>
+										<p class="avgTempValue text-center">
+											VALUE %
+										</p>
+									</div>
+									<div style="margin-top: -1.7em">
+										<a href="umidity_sensors.html" class="btn btn-success">Humidity Sensor List</a><br><br>
+										<a href="graph_umidity_sensors.html" class="btn btn-success">Humidity Sensor Chart</a>
+									</div>
+								</div>
+							</li><br>
+							<li></li>
+							<li></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </section>
+
+	<section  id="Parallax-one">
+		<div class="container">
+
+            <div class="row text-center">
+                <div class="col-md-8 col-md-offset-2 ">
+                </div>
+            </div>
+        </div>
+    </section>
+	
+    <section  id="shading-page">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-8 col-md-offset-2">
+                    <h2><i class="fa fa-sun-o main-color"></i>&nbsp;Shading</h2>
+                </div>
+
+            </div>
+            <!--<div class="row text-center">
+                <div class="col-md-12 ">
+                    <div class="col-md-6 col-sm-6">
+                        <ul class="plan">
+                            <li class="plan-head">SHADES CONTROL PANEL</li>
+                            <li>
+								<div class="row text-center space-pad">
+									<div class="col-md-1 col-sm-offset-5">
+										<div>
+											<div class="industrial led size three">
+												<div class="meter green"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<br>Shades Open
+							</li>
+							<li></li>
+							<li></li>
+							<li class="row text-center space-pad bottom"> Open/Close Shades<br>
+                                <a href="#contact-sec" class="btn btn-success">Open</a>
+							</li>
+							<li class="bottom">
+								<a href="#contact-sec" class="btn btn-success">Close</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-6 col-sm-6">
+                        <ul class="plan">
+                            <li class="plan-head">GREENHOUSE BRIGTHNESS</li> 
+                            <li>
+								<div class="row text-center space-pad">
+									<div class="industrial gauge size one center-block"><span class="ticks" data-amount="11" data-scale-freq="5"></span>
+										<div class="space"></div>
+										<div class="meter"></div>
+									</div>
+								</div>
+							</li>
+							<li></li>
+							<li ></li>
+							<li>
+								<div class="row text-center space-pad">
+									<div class="center-block">
+										<h4 class="text-center"><i class="fa fa-sun-o fa-2x main-color" aria-hidden="true"></i>Brightness</h4>
+										<p class="text-center">
+											VALUE %
+										</p>
+									</div>									
+								</div>
+							</li>
+							<li></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>-->
+			
+			<div class="row text-center">
+                <div class="col-md-12 ">
+                    <div class="col-md-9 col-sm-6">
+                        <ul class="plan">
+                            <li class="plan-head">SHADERS CONTROL PANEL</li>
+                            <li>
+								<div class="row text-center space-pad">
+									<div class="col-md-12">
+										<div>
+											<canvas id="shaderPlant" width="979" height="483" style="width: 35em; border: 2px solid #6F6F6F;">
+										</div>
+									</div>
+									
+								</div>
+							</li>
+							<li>
+							</li>
+							<li ></li><br>
+							<li class="">
+							  <div class="row">
+							    <div class="col-md-6">
+							      <div id="range-shader-0" style="width: 14.5em; margin-top: 2em; margin-left: 7em;"></div>
+							      <script>
+							      $(document).ready(function() {
+							        $("#range-shader-0").asRange({
+												step: 0.1,
+												range: false,
+												min: 0,
+												max: 1,
+							      value: 0,
+							      onChange: function(value) { onShaderChangeValue(0, value); }
+											  });
+											});
+							      </script>
+							    </div>
+							    <div class="col-md-6">
+							      <div id="range-shader-1" style="width: 14.5em; margin-top: 2em; margin-left: 7em;"></div>
+							      <script>
+							      $(document).ready(function() {
+							        $("#range-shader-1").asRange({
+												step: 0.1,
+												range: false,
+												min: 0,
+												max: 1,
+							      value: 0,
+							      onChange: function(value) { onShaderChangeValue(1, value); }
+											  });
+											});
+							      </script>
+							    </div>
+							  </div>
+                            </li>
+							<li ></li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-3 col-sm-6">
+                        <ul class="plan">
+                            <li class="plan-head">GREENHOUSE BRIGHTNESS</li> 
+                            <li>
+								<div class="row text-center space-pad">
+									<div class="center-block">
+										<div >
+											<div class="industrial gauge size one center-block"><span class="ticks" data-amount="21" data-scale-freq="5"></span>
+												<div class="space"></div>
+												<div class="meter"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</li>
+							<li></li>
+							<li class="bottom">
+								<div class="row text-center space-pad">
+									<div>
+										<h4 class="text-center"><i class="fa fa-sun-o fa-2x main-color" aria-hidden="true"></i>&nbsp;Average Brightness</h4>
+										<p class="avgTempValue text-center">
+											VALUE %
+										</p>
+									</div>
+									<div style="margin-top: -1.7em">
+										<a href="brightness_sensors.html" class="btn btn-success">Brightness Sensor List</a><br><br>
+										<a href="graph_brightness_sensors.html" class="btn btn-success">Brightness Sensor Chart</a>
+									</div>
+								</div>
+							</li><br>
+							<li></li>
+							<li></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </section>
+
+    <section  id="Parallax-two">
+        <div class="container">
+
+            <div class="row text-center">
+                <div class="col-md-8 col-md-offset-2 ">
+                     <h2><i class="fa fa-address-book-o fa-3x" aria-hidden="true"></i>&nbsp;CDF Company S.r.l. </h2>
+                    <h4>
+                        <strong>
+						<i class="fa fa-envelope-square" aria-hidden="true"></i>&nbsp; collazzo.d@gmail.com &nbsp;&nbsp;
+						<i class="fa fa-envelope-square" aria-hidden="true"></i>&nbsp; francescodg4@gmail.com &nbsp;&nbsp;
+						<i class="fa fa-envelope-square" aria-hidden="true"></i>&nbsp; chiara.farnesi@gmail.com
+                        </strong>
+                    </h4>
+                </div>
+
+            </div>
+
+
+        </div>
+    </section>
+
+    <section  id="contact-page">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                
+                    <div id="social-icon">
+                          <strong> <i class="fa fa-map-marker" aria-hidden="true"></i> Address:</strong> TeCIP institute - Via Giuseppe Moruzzi 1, 56127, Pisa (PI), Italy
+                    </div>
+                </div>
+				
+            </div>
+        </div>
+    </section>
+	
+    <div class="for-full-back " id="footer">
+        2016 www.cdf.com | All Right Reserved
+         
+    </div>
+	
+	<!--<div class="industrial preloader">&nbsp;</div>-->
+	
+    <!-- JAVASCRIPT FILES PLACED AT THE BOTTOM TO REDUCE THE LOADING TIME  -->
+    <!-- CORE JQUERY  -->
+	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <!-- BOOTSTRAP CORE SCRIPT -->  
+    <script src="assets/plugins/bootstrap.js"></script>
+    <!-- PARALLAX SCRIPT -->
+    <script src="assets/plugins/4jquery.parallax-1.1.3.js"></script>
+    <!-- CUSTOM SCRIPT -->  
+    <script src="assets/js/custom.js"></script>
+	
+	<script src="assets/js/bootstrap-number-input.js"></script>
+	<script src="assets/js/jquery-asRange.min.js"></script>
+	<script src="assets/js/industrial.js"></script> 
+	<script src="assets/js/app.js"></script> 
+	<script src="assets/js/intro.min.js"></script>
+	<script type="text/javascript">
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-36251023-1']);
+	  _gaq.push(['_setDomainName', 'jqueryscript.net']);
+	  _gaq.push(['_trackPageview']);
+
+	  (function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+
+
+	  function init() {
+	  window.setTimeout(start, 500)
+	  // $(window).on("load", start);
+	  // $(document).ready(start)
+	  }
+
+	  function start() {
+	  	humidityPlant = new HumidityPlant()
+      	  	humidityPlant.init("humidityPlant")
+	      	humidityPlant.update()
+
+	  	shaderPlant = new ShaderPlant("shaderPlant")
+	  	shaderPlant.update()
+	  }
+
+	  function onShaderChangeValue(id, value) {
+	  	shaderPlant.shaders[id].setOpening(value)
+		shaderPlant.update()	  
+	  }
+	  
+	  $("[name='checkbox2']").change(function() {
+		if(!confirm('Do you wanna cancel me!')) {
+			this.checked = true;
+		}
+	});
+
+	$('#colorful').bootstrapNumber({
+		upClass: 'success',
+		downClass: 'success'
+	});
+	  
+	</script>
+
+</body>
+</html>

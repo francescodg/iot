@@ -9,7 +9,13 @@ $(document).ready(function(){
     });
 
     socket.on('new temperature', function(data) {
-    	var i = data.id;
+    	console.log(data);
+    	
+    	var map = new Array();
+    	map["Temperature_Sensor_0"] = 0;
+    	map["Temperature_Sensor_1"] = 1;
+    	
+    	var i = map[data.id];
     	var value = data.value;	
     	$_scope.system.temperatureSensors[i] = value;    	
     	$_scope.$apply();
@@ -33,7 +39,7 @@ app = angular.module("app", [])
 app.controller("appCtrl", function($scope) {
     $_scope = $scope
     $_scope.system = {
-    	temperatureSensors: new Array(3),
+    	temperatureSensors: new Array(),
 	averageTemperature: null
     }
 })
