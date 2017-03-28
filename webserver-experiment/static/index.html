@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Synchronized Sliders</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="websocket.js"></script>
+</head>
+<body>
+    <input id="slider1" class="sync" type="range" min="0" max="50" /> <br>
+    <input id="slider2" class="sync" type="range" min="0" max="50" /><br/>
+    <input id="txt1" type="text" />
+    <button id="updateBtn">Update</button>
+    <input id="timer" type="text" />    
+    <button id="startBtn">Start</button><br/>
+    <input id="subscribeTxt" type="text" />
+    <button id="subscribeBtn">Subscribe</button>
+</body>
+</html>
