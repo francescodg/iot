@@ -1,0 +1,10 @@
+GET http://127.0.0.1:8282/~/mn-cse?ty=2&fu=1
+GET http://127.0.0.1:8282/~/mn-cse?ty=2&fu=1&drt=0
+
+PUT http://127.0.0.1:8282/~/mn-cse/CAE128482302
+Header: Content-Type: application/json
+ {
+   "m2m:ae": {
+     "lbl": ["Type/sensor", "Category/temperature", "Location/home"]
+   }
+ }
