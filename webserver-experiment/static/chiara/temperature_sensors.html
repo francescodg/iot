@@ -21,6 +21,18 @@
 		.content-centered {
 			text-align: center;
 		}
+
+		.temperature-critical {
+			color: red;
+		}
+
+		.temperature-ok {
+			color: green;
+		}
+
+		.temperature-warning {
+			color: yellow;
+		}
 	</style>
 	<link rel="stylesheet" href="assets/css/industrial.css">
 	<link rel="stylesheet" href="assets/css/introjs.min.css">
@@ -91,13 +103,13 @@
 	</div>
 	
 	
-	<div ng-controller="appCtrl" class="container center-block">
+	<div ng-controller="temperatureSensors" class="container center-block">
 	  <div class="row">
-		<div class="col-md-4" ng-repeat="temperature in system.temperatureSensors track by $index">
+		<div class="col-md-4" ng-repeat="(sensor, temperature) in temperatureSensors">
 			<div class="well well-sm">
 				<div class="text-center">
-					<div class="fa fa-thermometer-three-quarters fa-4x main-color"></div>
-					<div style="margin-top: .5em; margin-bottom: .5em;">Sensor {{ $index + 1 }}</div>
+					<div ng-model="ok" class="fa fa-thermometer-three-quarters fa-4x" ng-class="getCriticalLevel(temperature)" ></div>
+					<div style="margin-top: .5em; margin-bottom: .5em;">Sensor {{ sensor }}</div>
 					<div style="font-size: 1.5em">{{ temperature }} °C</div>
 				</div><br>
 				<div>

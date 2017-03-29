@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Student</title>
+    <script src="../libs/js/angular.min.js"></script>
+    <script src="app.js"></script>
+  </head>
+  <body ng-app="app">
+    <div ng-controller="controller">
+      {{ status }}
+    </div>
+    <button onclick="(function (){ $_scope.status = !$_scope.status; $_scope.$apply() })()">Click</button>
+    
+    <div ng-controller="controller2"></div>
+  </body>
+</html>
