@@ -11,7 +11,18 @@ socketio = SocketIO(app)
 
 class System:
     def __init__(self):
+        self.sensors = {
+            'Temperature_Sensor_0': [],
+            'Temperature_Sensor_1': [],
+            'Temperature_Sensor_2': [],
+            'Temperature_Average': []
+        } 
+        
         self.temperatureSensors = [1, 2, 3]
+
+    def random(self):
+        for sensor in self.sensors:
+            self.sensors[sensor].append(random.random() * 100)
 
     def randomUpdate(self, index):
         self.temperatureSensors[index] = random.randint(0, 100)
@@ -60,14 +71,13 @@ def on_new_temperature():
 
 @app.route("/temperature/sensors/history")
 def get_temperature_history():
+    system.random()    
     collection = []
-    for sensor in [
-            'Temperature_Sensor_0', 'Temperature_Sensor_1', 
-            'Temperature_Sensor_2', 'Temperature_Average']:
+    sensors = system.sensors
+    for sensor, values in sensors.iteritems():
         history = []
-        for time in range(0, 10):
-            history.append({'time': time,\
-                            'value': random.randint(0, 10)})
+        for time in range(0, len(values)):
+            history.append({'time': time, 'value': values[time]})
         collection.append({'id': sensor, 'history': history})
     return json.dumps(collection)
         

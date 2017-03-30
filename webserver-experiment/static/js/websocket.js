@@ -41,6 +41,7 @@ app.controller("temperatureSensors", function($scope, $http) {
 
 app.controller("temperatureGraph", function($scope, $http, $interval) {
     var chart = _createGraph("chartContainer", "Temperature History", function(){ chart.render(); });
+    
     update();
     $interval(update, 10000);
     
