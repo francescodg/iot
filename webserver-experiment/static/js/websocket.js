@@ -40,7 +40,7 @@ app.controller("temperatureSensors", function($scope, $http) {
 
 
 app.controller("temperatureGraph", function($scope, $http, $interval) {
-    var chart = _createGraph("chartContainer", "Temperature History");
+    var chart = _createGraph("chartContainer", "Temperature History", function(){ chart.render(); });
     update();
     $interval(update, 10000);
     
@@ -51,34 +51,34 @@ app.controller("temperatureGraph", function($scope, $http, $interval) {
 
     function onNewData(response) {
 	var sensors = response.data;
-
-	chart.options.data = new Array();
-
 	for (var s in sensors) {
 	    var series;
-
-	    if (sensors[s].id == "Temperature_Average") {
-		series = _createSeries("green");
-		series.name = "Average"
+	    if (chart.options.data[s] == undefined) {
+		if (sensors[s].id == "Temperature_Average") {
+		    series = _createSeries("green");
+		    series.name = "Average"
+		} else {
+		    series = _createSeries("grey");
+		    series.name = sensors[s].id;
+		}
+		chart.options.data[s] = series;
 	    } else {
-		series = _createSeries("grey");
-		series.name = sensors[s].id;
+		series = chart.options.data[s];
+		series.dataPoints = new Array();
 	    }
 
 	    for (var h in sensors[s].history) {
 		var time =  parseInt(h);
 		var value = sensors[s].history[h].value;	    
 		series.dataPoints.push({x: time, y: value});
-	    }
-	    
-	    chart.options.data.push(series);
+	    }	 
 	}
 
 	chart.render();
     }
 });
 
-function _createGraph(container, title) {
+function _createGraph(container, title, onItemClick) {
     return new CanvasJS.Chart(container, {
 	title: {
 	    text: title,
@@ -102,7 +102,7 @@ function _createGraph(container, title) {
 		    e.dataSeries.visible = false;
 		else
 		    e.dataSeries.visible = true;
-		chart.render();
+		onItemClick()
 	    },
 	},
 	animationEnabled: true,
