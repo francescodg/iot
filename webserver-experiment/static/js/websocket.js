@@ -36,41 +36,84 @@ app.controller("temperatureSensors", function($scope, $http) {
     }
 });
 
-app.controller("temperatureGraph", function($scope, $http) {
-    var graph = Morris.Line({
-    	element: 'line-chart',	
-    	data: new Array(),
-    	xkey: 'y',
-    	ykeys: ['a', 'b', 'c'],
-    	labels: ['Total Income', 'Total Outcome'],
-    	fillOpacity: 0.6,
-    	hideHover: 'auto',
-    	behaveLikeLine: true,
-    	resize: true,
-    	stacked: true,
-    	pointFillColors:['#ffffff'],
-    	pointStrokeColors: ['black'],
-    	lineColors:['gray', 'gray', '#27C00A'],
-	parseTime: false
-    });
+app.controller("temperatureGraph", function($scope, $http, $interval) {
+    console.log("temperatureGraph()")
 
+    var chart = new CanvasJS.Chart("chartContainer", {
+	title: {
+	    text: "Temperature History",
+	    fontSize: 30
+	},
+	axisX: {
+	    gridColor: "silver",
+	    tickColor: "silver",
+	    interval: 5
+	},
+	toolTip: {
+	    shared: true
+	},
+	axisY: {
+	    gridColor: "silver",
+	    tickColor: "silver"
+	},
+	legend: {
+	    cursor: "pointer",
+	    itemclick: function (e) {
+		if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible)
+		    e.dataSeries.visible = false;
+		else
+		    e.dataSeries.visible = true;
+		chart.render();
+	    },
+	},
+	animationEnabled: true,
+	data: new Array()
+    });
+    
     function update() {
-	$http.get(WEBSERVER + "/temperature/sensors/history")
-	    .then(onNewData)
+    	$http.get(WEBSERVER + "/temperature/sensors/history")
+    	    .then(onNewData)
     }
 
     function onNewData(response) {
-	var data = new Array();
-	var entries = response.data;
-	for (var e in entries)
-	    data.push(
-		{y: entries[e].time,
-		 a: entries[e].value,
-		 b: 10 - entries[e].value,
-		 c: (entries[e].value + 10 - entries[e].value) / 2});
-	console.log(data);
-	graph.setData(data);
-    };
+	chart.options.data = new Array();
 
-    setInterval(function() { update() }, 2000);
+    	var collection = response.data;
+	for (var s in collection) {
+	    // Define series style
+	    var series;
+	    if (collection[s].id == "Temperature_Average") {
+		series = {
+		    type: "line",
+		    showInLegend: true,
+		    lineThickness: 2,
+		    markerType: "circle",
+		    color: "green",
+		    name: "Average",
+		    dataPoints: new Array()
+		};
+	    } else {
+		series = {
+		    type: "line",
+		    showInLegend: true,
+		    lineThickness: 2,
+		    markerType: "circle",
+		    color: "grey",
+		    name: collection[s].id,
+		    dataPoints: new Array()
+		};
+	    }
+
+	    for (var h in collection[s].history) {
+		var value = collection[s].history[h].value;	    
+		series.dataPoints.push({x: parseInt(h), y: value});
+	    }
+	    
+	    chart.options.data.push(series);
+	}
+	chart.render();
+    }
+
+    update();
+    $interval(update, 10000);
 });

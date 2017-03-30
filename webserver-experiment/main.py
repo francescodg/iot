@@ -60,10 +60,16 @@ def on_new_temperature():
 
 @app.route("/temperature/sensors/history")
 def get_temperature_history():
-    history = []
-    for time in range(0, 10):
-        history.append({'time': time, 'value': random.randint(0, 10)})
-    return json.dumps(history)
+    collection = []
+    for sensor in [
+            'Temperature_Sensor_0', 'Temperature_Sensor_1', 
+            'Temperature_Sensor_2', 'Temperature_Average']:
+        history = []
+        for time in range(0, 10):
+            history.append({'time': time,\
+                            'value': random.randint(0, 10)})
+        collection.append({'id': sensor, 'history': history})
+    return json.dumps(collection)
         
 @app.route("/temperature/sensors")
 def get_temperature_sensors():

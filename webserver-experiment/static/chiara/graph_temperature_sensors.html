@@ -4,12 +4,17 @@
   <meta charset="UTF-8">
   <title>Morris.js charts - simple examples</title>
   
-	<link rel="stylesheet" href="assets/css/bootstrap.css">    
+	<link rel="stylesheet" href="assets/css/bootstrap.css">
+	
+	<script src="../libs/js/angular.min.js"></script>
+	<script src="../libs/js/canvasjs.min.js"></script>
+	<script src="../js/websocket.js"></script>
+
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>
 	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.2/raphael-min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.0/morris.min.js"></script>
-	<script src="../js/websocket.js"></script>
+
 	<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
 	<link href="assets/css/asRange.min.css" rel="stylesheet" type="text/css">
 
@@ -108,7 +113,7 @@
 			<div class="well well-sm">
 				<div class="text-center">
 					<label class="label label-success">Line Chart</label>
-					<div ng-controller="temperatureGraph" id="line-chart"></div>
+					<div ng-controller="temperatureGraph" id="chartContainer" style="height: 400px; width: 100%;"></div>
 				</div>
 			</div>
 	    </div>
