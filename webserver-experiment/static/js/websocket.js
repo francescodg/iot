@@ -1,6 +1,8 @@
 var WEBSERVER = "http://127.0.0.1:5000";
 
+
 app = angular.module("app", []);
+
 
 app.controller("temperatureSensors", function($scope, $http) {
     $scope.temperatureSensors = new Object();
@@ -36,18 +38,55 @@ app.controller("temperatureSensors", function($scope, $http) {
     }
 });
 
-app.controller("temperatureGraph", function($scope, $http, $interval) {
-    console.log("temperatureGraph()")
 
-    var chart = new CanvasJS.Chart("chartContainer", {
+app.controller("temperatureGraph", function($scope, $http, $interval) {
+    var chart = _createGraph("chartContainer", "Temperature History");
+    update();
+    $interval(update, 10000);
+    
+    function update() {
+    	$http.get(WEBSERVER + "/temperature/sensors/history")
+    	    .then(onNewData)
+    }
+
+    function onNewData(response) {
+	var sensors = response.data;
+
+	chart.options.data = new Array();
+
+	for (var s in sensors) {
+	    var series;
+
+	    if (sensors[s].id == "Temperature_Average") {
+		series = _createSeries("green");
+		series.name = "Average"
+	    } else {
+		series = _createSeries("grey");
+		series.name = sensors[s].id;
+	    }
+
+	    for (var h in sensors[s].history) {
+		var time =  parseInt(h);
+		var value = sensors[s].history[h].value;	    
+		series.dataPoints.push({x: time, y: value});
+	    }
+	    
+	    chart.options.data.push(series);
+	}
+
+	chart.render();
+    }
+});
+
+function _createGraph(container, title) {
+    return new CanvasJS.Chart(container, {
 	title: {
-	    text: "Temperature History",
+	    text: title,
 	    fontSize: 30
 	},
 	axisX: {
 	    gridColor: "silver",
-	    tickColor: "silver",
-	    interval: 5
+	    tickColor: "silver"
 	},
 	toolTip: {
 	    shared: true
@@ -69,51 +108,15 @@ app.controller("temperatureGraph", function($scope, $http, $interval) {
 	animationEnabled: true,
 	data: new Array()
     });
-    
-    function update() {
-    	$http.get(WEBSERVER + "/temperature/sensors/history")
-    	    .then(onNewData)
-    }
+}
 
-    function onNewData(response) {
-	chart.options.data = new Array();
-
-    	var collection = response.data;
-	for (var s in collection) {
-	    // Define series style
-	    var series;
-	    if (collection[s].id == "Temperature_Average") {
-		series = {
-		    type: "line",
-		    showInLegend: true,
-		    lineThickness: 2,
-		    markerType: "circle",
-		    color: "green",
-		    name: "Average",
-		    dataPoints: new Array()
-		};
-	    } else {
-		series = {
-		    type: "line",
-		    showInLegend: true,
-		    lineThickness: 2,
-		    markerType: "circle",
-		    color: "grey",
-		    name: collection[s].id,
-		    dataPoints: new Array()
-		};
-	    }
-
-	    for (var h in collection[s].history) {
-		var value = collection[s].history[h].value;	    
-		series.dataPoints.push({x: parseInt(h), y: value});
-	    }
-	    
-	    chart.options.data.push(series);
-	}
-	chart.render();
-    }
-
-    update();
-    $interval(update, 10000);
-});
+function _createSeries(color) {
+    return {
+	type: "line",
+	showInLegend: true,
+	lineThickness: 2,
+	markerType: "circle",
+	color: color,
+	dataPoints: new Array()
+    };
+}
