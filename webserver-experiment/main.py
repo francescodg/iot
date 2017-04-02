@@ -30,6 +30,19 @@ class System:
     @property
     def averageTemperature(self):
         return sum(self.temperatureSensors) / len(self.temperatureSensors)
+
+    @property
+    def overview(self):
+        overview = {
+            'averageTemperature': self.averageTemperature,
+            'averageHumidity': 100,
+            'averageLuminosity': 120,
+            'boiler': {
+                'pressure': 100,
+                'fuel': 130
+            }
+        }
+        return json.dumps(overview)
         
 system = System()
 
@@ -44,9 +57,12 @@ def timer():
   system.randomUpdate(index)
 
   data = { 'id': 'Temperature_Sensor_' + str(index), 'value': system.temperatureSensors[index] }
-  
+
+  system.random()
+
   socketio.emit("new temperature", data)
   socketio.emit("new average temperature", system.averageTemperature)
+  socketio.emit("new overview", system.overview)
 
   threading.Timer(5, timer).start()
 
@@ -93,6 +109,10 @@ def send():
     print("Request on send")
     socketio.emit('new data', {'data': str(random.randint(0, 10))})
     return "Send"
+
+@app.route("/overview")
+def get_overview():
+    return system.overview
 
 if __name__ == "__main__":
     timer()    

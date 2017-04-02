@@ -122,16 +122,30 @@ function _createSeries(color) {
     };
 }
 
-app.controller("overviewCtrl", function($scope){
-    console.log("overviewCtrl");
+app.controller("overviewCtrl", function($scope, $http, $timeout){
+    $http.get(WEBSERVER + '/overview')
+	.then(function(response) {
+	    $timeout(function(){
+		_updateScope(response.data)
+	    }, 0);
+	    // _updateScope(response.data);
+	    var socket = io.connect(WEBSERVER);
+	    socket.on('new overview', function(data) {
+		var overview = JSON.parse(data);
+		$timeout(function(){
+		    _updateScope(overview)
+		}, 0);
+	    });
+    });
 
-    var value = (Math.random() * 100).toFixed(2);
-    
-    $scope.averageTemperature = value;
-    $scope.boiler = {
-    	pressure: value,
-    	fuel: value
+    function _updateScope(overview) {
+	console.log(overview)
+	$scope.averageTemperature = overview.averageTemperature;
+	$scope.averageHumidity = overview.averageHumidity;
+	$scope.averageLuminosity = overview.averageLuminosity;
+	$scope.boilerFuel = overview.boiler.fuel;
+	$scope.boilerPressure = overview.boiler.pressure;
+	// $scope.$apply();
+	console.log(overview.averageTemperature);
     }
-    $scope.averageHumidity = value;
-    $scope.averageLuminosity = value;
 });
