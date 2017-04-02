@@ -121,3 +121,17 @@ function _createSeries(color) {
 	dataPoints: new Array()
     };
 }
+
+app.controller("overviewCtrl", function($scope){
+    console.log("overviewCtrl");
+
+    var value = (Math.random() * 100).toFixed(2);
+    
+    $scope.averageTemperature = value;
+    $scope.boiler = {
+    	pressure: value,
+    	fuel: value
+    }
+    $scope.averageHumidity = value;
+    $scope.averageLuminosity = value;
+});

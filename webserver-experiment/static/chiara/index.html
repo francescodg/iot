@@ -17,6 +17,8 @@
 
     <title>IoT-Geen House</title>
 	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+	<script src="../libs/js/angular.min.js"></script>
+	<script src="../js/websocket.js"></script>
 
 	<script src="../js/easeljs-0.8.2.min.js"></script>
 	<script src="js/plant.js"></script>
@@ -91,7 +93,7 @@
     <![endif]-->
 </head>
 
-<body onload="init()">	
+<body ng-app="app" onload="init()">	
     <header>
 		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 			<div class="container">
@@ -220,7 +222,7 @@
     </section>-->
 
     <section  id="services-page">
-        <div class="container">
+        <div ng-controller="overviewCtrl" class="container">
           
             <div class="row text-center">
                 <div class="col-md-8 col-md-offset-2">
@@ -234,8 +236,8 @@
                     <div >
                          <i class="fa fa-thermometer-three-quarters fa-4x main-color" aria-hidden="true"></i>
                         <h4>Temperature</h4>
-                        <p class="avgTempValue">
-                            VALUE C°
+                        <p>
+                            {{ averageTemperature }} C°
                         </p>
                     </div>
                 </div>
@@ -245,7 +247,7 @@
                          <i class="fa fa-bar-chart fa-4x main-color" aria-hidden="true"></i>
                         <h4>Pressure Boiler</h4>
                         <p>
-                            VALUE PSI
+                            {{ boiler.pressure }} PSI
                         </p>
                     </div>
                 </div>
@@ -254,8 +256,7 @@
                     <div >
                         <i class="fa fa-fire fa-4x main-color"></i>
                         <h4>Fuel Boiler</h4>
-                        <p>
-							VALUE %
+                        <p> {{ boiler.fuel }} %
                         </p>
                     </div>
                 </div>
@@ -265,7 +266,7 @@
                         <i class="fa fa-tint fa-4x main-color"></i>
                         <h4>Humidity</h4>
                         <p>
-                            VALUE %
+                            {{ averageHumidity }} %
                         </p>
                     </div>
                 </div>
@@ -273,9 +274,9 @@
                 <div class="col-md-2 col-sm-2">
                     <div>
                         <i class="fa fa-sun-o fa-4x main-color"></i>
-                        <h4>Brightness</h4>
+                        <h4>Luminosity</h4>
                         <p>
-                            VALUE %
+                            {{ averageLuminosity }} %
                         </p>
                     </div>
                 </div>
