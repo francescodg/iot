@@ -123,6 +123,9 @@ function _createSeries(color) {
 }
 
 app.controller("overviewCtrl", function($scope, $http, $timeout){
+
+    console.log("overviewCtrl")
+
     $http.get(WEBSERVER + '/overview')
 	.then(function(response) {
 	    $timeout(function(){

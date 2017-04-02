@@ -222,7 +222,7 @@
 		</div>
     </section>-->
 
-    <section  id="services-page">
+    <section id="services-page">
         <div ng-controller="overviewCtrl" class="container">
           
             <div class="row text-center">
@@ -473,8 +473,8 @@
 								<div class="row">
 									<div>
 										<h4 class="text-center"><i class="fa fa-thermometer-three-quarters fa-2x main-color" aria-hidden="true"></i>&nbsp;Average Temperature</h4>
-										<p class="avgTempValue text-center">
-											VALUE C°
+										<p ng-controller="overviewCtrl" class="avgTempValue text-center">
+											{{ averageTemperature }} C°
 										</p>
 										<div style="margin-top: -1.7em">
 											<a href="temperature_sensors.html" class="btn btn-success">Thermometers List</a><br><br>
@@ -536,7 +536,7 @@
                         </ul>
                     </div>
 
-                    <div class="col-md-3 col-sm-6">
+                    <div ng-controller="overviewCtrl" class="col-md-3 col-sm-6">
                         <ul class="plan">
                             <li class="plan-head">GREENHOUSE HUMIDITY</li> 
                             <li>
@@ -557,7 +557,7 @@
 									<div>
 										<h4 class="text-center"><i class="fa fa-tint fa-2x main-color" aria-hidden="true"></i>&nbsp;Average Humidity</h4>
 										<p class="avgTempValue text-center">
-											VALUE %
+											{{ averageTemperature }} %
 										</p>
 									</div>
 									<div style="margin-top: -1.7em">
@@ -710,7 +710,7 @@
 
                     <div class="col-md-3 col-sm-6">
                         <ul class="plan">
-                            <li class="plan-head">GREENHOUSE BRIGHTNESS</li> 
+                            <li class="plan-head">GREENHOUSE LUMINOSITY</li> 
                             <li>
 								<div class="row text-center space-pad">
 									<div class="center-block">
@@ -727,14 +727,14 @@
 							<li class="bottom">
 								<div class="row text-center space-pad">
 									<div>
-										<h4 class="text-center"><i class="fa fa-sun-o fa-2x main-color" aria-hidden="true"></i>&nbsp;Average Brightness</h4>
-										<p class="avgTempValue text-center">
-											VALUE %
+										<h4 class="text-center"><i class="fa fa-sun-o fa-2x main-color" aria-hidden="true"></i>&nbsp;Average Luminosity</h4>
+										<p ng-controller="overviewCtrl" class="text-center">
+											{{ averageLuminosity }} %
 										</p>
 									</div>
 									<div style="margin-top: -1.7em">
-										<a href="brightness_sensors.html" class="btn btn-success">Brightness Sensor List</a><br><br>
-										<a href="graph_brightness_sensors.html" class="btn btn-success">Brightness Sensor Chart</a>
+										<a href="brightness_sensors.html" class="btn btn-success">Luminosity Sensor List</a><br><br>
+										<a href="graph_brightness_sensors.html" class="btn btn-success">Luminosity Sensor Chart</a>
 									</div>
 								</div>
 							</li><br>
