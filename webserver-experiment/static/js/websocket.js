@@ -128,24 +128,20 @@ app.controller("overviewCtrl", function($scope, $http, $timeout){
 	    $timeout(function(){
 		_updateScope(response.data)
 	    }, 0);
-	    // _updateScope(response.data);
 	    var socket = io.connect(WEBSERVER);
-	    socket.on('new overview', function(data) {
-		var overview = JSON.parse(data);
+	    socket.on('new overview', function(data) {		
 		$timeout(function(){
+		    var overview = JSON.parse(data);
 		    _updateScope(overview)
 		}, 0);
 	    });
     });
 
     function _updateScope(overview) {
-	console.log(overview)
 	$scope.averageTemperature = overview.averageTemperature;
 	$scope.averageHumidity = overview.averageHumidity;
 	$scope.averageLuminosity = overview.averageLuminosity;
 	$scope.boilerFuel = overview.boiler.fuel;
 	$scope.boilerPressure = overview.boiler.pressure;
-	// $scope.$apply();
-	console.log(overview.averageTemperature);
     }
 });

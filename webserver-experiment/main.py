@@ -32,14 +32,14 @@ class System:
         return sum(self.temperatureSensors) / len(self.temperatureSensors)
 
     @property
-    def overview(self):
+    def overview(self):        
         overview = {
             'averageTemperature': self.averageTemperature,
-            'averageHumidity': 100,
-            'averageLuminosity': 120,
+            'averageHumidity': random.randint(0, 110),
+            'averageLuminosity': random.randint(0, 100),
             'boiler': {
-                'pressure': 100,
-                'fuel': 130
+                'pressure': random.randint(0, 100),
+                'fuel': random.randint(0, 100)
             }
         }
         return json.dumps(overview)
