@@ -65,9 +65,29 @@ def get_temperature_history():
         
 @app.route("/temperature/sensors")
 def get_temperature_sensors():
-    sensors = [{'id': 'Temperature_Sensor_0', 'lastValue': 1},
-               {'id': 'Temperature_Sensor_1', 'lastValue': 2},
-               {'id': 'Temperature_Sensor_2', 'lastValue': 3}]
+    sensors = []
+    for sensor in system.temperatureSensors:
+        sensors.append({
+            'id': sensor['id'], 
+            'lastValue': sensor['lastValue']})
+    return json.dumps(sensors)
+
+@app.route("/humidity/sensors")
+def get_humidity_sensors():
+    sensors = []
+    for sensor in system.humiditySensors:
+        sensors.append({
+            'id': sensor['id'], 
+            'lastValue': sensor['lastValue']})
+    return json.dumps(sensors)
+
+@app.route("/luminosity/sensors")
+def get_luminosity_sensors():
+    sensors = []
+    for sensor in system.luminositySensors:
+        sensors.append({
+            'id': sensor['id'], 
+            'lastValue': sensor['lastValue']})
     return json.dumps(sensors)
 
 @app.route("/send")
@@ -81,7 +101,7 @@ def get_overview():
     return system.overview
 
 if __name__ == "__main__":
-    timer()    
+    # timer()    
     # start()
     socketio.run(app, debug=True, use_reloader=False) # To disable duplicate output (use_reloader=False)
 

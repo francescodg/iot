@@ -9,17 +9,31 @@ class System:
             'Temperature_Sensor_1': [],
             'Temperature_Sensor_2': [],
             'Temperature_Average': []
-        } 
-                    
-        self.temperatureSensors = m2m.getTemperatureSensors()
-        self.luminositySensors = m2m.getLuminositySensors()
-        self.humiditySensors = m2m.getHumiditySensors()
+        }
+        self.temperatureSensors = self._retrieveSensors("temperature")
+        self.luminositySensors = self._retrieveSensors("luminosity")
+        self.humiditySensors = self._retrieveSensors("humidity")
 
-        temperatureHistory = m2m.getSensorHistory(
-            self.temperatureSensors[self.temperatureSensors.keys()[0]])
+    def _retrieveSensors(self, sensorType):
+        sensors = []
+        if sensorType == "temperature":
+            sensorUris = m2m.getTemperatureSensors()
+        elif sensorType == "humidity":
+            sensorUris = m2m.getHumiditySensors()
+        elif sensorType == "luminosity":
+            sensorUris = m2m.getLuminositySensors()
+        else:
+            sensorUris = []
+        for s in sensorUris:
+            sensors.append({
+                'id': s,
+                'uri': sensorUris[s],
+                'history': m2m.getSensorHistory(sensorUris[s]),
+                'lastValue': m2m.getSensorLastValue(sensorUris[s])
+            })
+        return sensors
 
-        print(temperatureHistory)
-
+        
     def random(self):
         for sensor in self.sensors:
             self.sensors[sensor].append(random.random() * 100)

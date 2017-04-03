@@ -83,6 +83,19 @@ def getSensorHistory(sensorUri):
                         history.append({'time': timestamp, 'value': value})
         return history
 
+
+def getSensorLastValue(sensorUri):
+        r = _getLastValue(sensorUri)
+        return r.json()["m2m:cin"]["con"] 
+
+
+def _getLastValue(container):
+        r = requests.get(
+                M2M_HOST + container + '/la',
+                headers=_createHeader())
+        return r
+
+
 def _getContentInstances(container):
         r = requests.get(
                 M2M_HOST + container,
