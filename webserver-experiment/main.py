@@ -13,24 +13,7 @@ socketio = SocketIO(app)
 system = system.System()
 
 def systemUpdateTemperature(sensorId, value):
-    data = { 'id': 'Temperature_Sensor_' + sensorId, 'value': value }
-    socketio.emit("new temperature", data)
-    socketio.emit("new average temperature", system.averageTemperature)
-
-def timer():
-  # Update system
-  index = random.randint(0, len(system.temperatureSensors)-1)
-  system.randomUpdate(index)
-
-  data = { 'id': 'Temperature_Sensor_' + str(index), 'value': system.temperatureSensors[index] }
-
-  system.random()
-
-  socketio.emit("new temperature", data)
-  socketio.emit("new average temperature", system.averageTemperature)
-  socketio.emit("new overview", system.overview)
-
-  threading.Timer(5, timer).start()
+    pass
 
 def start():
     thread.start_new_thread(subscribe, ())
@@ -51,8 +34,20 @@ def on_new_temperature():
         pass
     return "", 202
 
+@app.route("/<sensorType>/history")
+def get_sensor_history(sensorType):
+    collection = []
+    for sensor in system.temperatureSensors:
+        collection.append({
+            'id': sensor['id'],
+            'history': sensor['history']})
+    return json.dumps(collection)
+
 @app.route("/temperature/sensors/history")
 def get_temperature_history():
+
+    return get_sensor_history('')
+
     system.random()    
     collection = []
     sensors = system.sensors
@@ -62,29 +57,18 @@ def get_temperature_history():
             history.append({'time': time, 'value': values[time]})
         collection.append({'id': sensor, 'history': history})
     return json.dumps(collection)
-        
-@app.route("/temperature/sensors")
-def get_temperature_sensors():
-    sensors = []
-    for sensor in system.temperatureSensors:
-        sensors.append({
-            'id': sensor['id'], 
-            'lastValue': sensor['lastValue']})
-    return json.dumps(sensors)
 
-@app.route("/humidity/sensors")
-def get_humidity_sensors():
+@app.route("/<sensorType>/sensors")
+def get_sensors(sensorType):
+    uris = []
+    if sensorType == "temperature":
+        uris = system.temperatureSensors
+    elif sensorType == "luminosity":
+        uris = system.luminositySensors
+    elif sensorType == "humidity":
+        uris = system.humiditySensors
     sensors = []
-    for sensor in system.humiditySensors:
-        sensors.append({
-            'id': sensor['id'], 
-            'lastValue': sensor['lastValue']})
-    return json.dumps(sensors)
-
-@app.route("/luminosity/sensors")
-def get_luminosity_sensors():
-    sensors = []
-    for sensor in system.luminositySensors:
+    for sensor in uris:
         sensors.append({
             'id': sensor['id'], 
             'lastValue': sensor['lastValue']})
@@ -100,8 +84,14 @@ def send():
 def get_overview():
     return system.overview
 
+def timer():
+  # socketio.emit("new temperature", random.randint(0, 100))
+  # socketio.emit("new average temperature", random.randint(0, 100))
+  socketio.emit("new overview", system.overview)
+  threading.Timer(5, timer).start()
+
 if __name__ == "__main__":
-    # timer()    
+    timer()    
     # start()
     socketio.run(app, debug=True, use_reloader=False) # To disable duplicate output (use_reloader=False)
 

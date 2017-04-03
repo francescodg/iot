@@ -80,13 +80,15 @@ def getSensorHistory(sensorUri):
                                 headers=_createHeader())
                         value = r.json()["m2m:cin"]["con"]
                         timestamp = r.json()["m2m:cin"]["ct"]
-                        history.append({'time': timestamp, 'value': value})
+                        history.append({
+                                'time': timestamp,
+                                 'value': float(value)})
         return history
 
 
 def getSensorLastValue(sensorUri):
         r = _getLastValue(sensorUri)
-        return r.json()["m2m:cin"]["con"] 
+        return float(r.json()["m2m:cin"]["con"])
 
 
 def _getLastValue(container):

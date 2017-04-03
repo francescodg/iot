@@ -46,14 +46,25 @@ app.controller("temperatureGraph", function($scope, $http, $interval) {
     $interval(update, 10000);
     
     function update() {
-    	$http.get(WEBSERVER + "/temperature/sensors/history")
+    	$http.get(WEBSERVER + "/temperature/history")
     	    .then(onNewData)
     }
 
     function onNewData(response) {
-	var sensors = response.data;
+	console.log('temperatureGraph', response.data)
+
+	// Sort sensors' id for cleaner legend 
+	var sensors = response.data.sort(function(a, b){
+	    if (a.id < b.id)
+		return -1;
+	    if (a.id > b.id)
+		return 1;
+	    else
+		return 0;
+	});
+
 	for (var s in sensors) {
-	    var series;
+	    var series;	    
 	    if (chart.options.data[s] == undefined) {
 		if (sensors[s].id == "Temperature_Average") {
 		    series = _createSeries("green");
@@ -68,7 +79,17 @@ app.controller("temperatureGraph", function($scope, $http, $interval) {
 		series.dataPoints = new Array();
 	    }
 
-	    for (var h in sensors[s].history) {
+	    // Sort timestamp
+	    var history = sensors[s].history.sort(function(a, b){
+		if (a.time < b.time)
+		    return -1;
+		if (a.time > b.time)
+		    return 1;
+		else 
+		    return 0;
+	    });
+
+	    for (var h in history) {
 		var time =  parseInt(h);
 		var value = sensors[s].history[h].value;	    
 		series.dataPoints.push({x: time, y: value});
