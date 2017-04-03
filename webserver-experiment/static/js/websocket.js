@@ -6,7 +6,7 @@ app = angular.module("app", []);
 
 app.controller("temperatureSensors", function($scope, $http) {
     $scope.temperatureSensors = new Object();
-    $http.get(WEBSERVER + '/temperature/sensors', null)
+    $http.get(WEBSERVER + '/temperature/last', null)
 	.then(function success(response) {
 	    var sensors = response.data;
 	    for (var s in sensors) {
@@ -24,7 +24,8 @@ app.controller("temperatureSensors", function($scope, $http) {
 
     function onNewTemperature(data) {
 	console.log(data)
-	$scope.temperatureSensors[data.id] = data.value.toFixed(1);
+	var value = parseFloat(data.value).toFixed(1)
+	$scope.temperatureSensors[data.id] = value;
 	$scope.$apply();
     }
 

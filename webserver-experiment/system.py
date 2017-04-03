@@ -33,7 +33,25 @@ class System:
             })
         return sensors
 
+    def getLastValue(self, sensorType):
+        collection = []
+        for sensor in self.temperatureSensors:
+            sensor['lastValue'] = m2m.getSensorLastValue(sensor['uri'])
+            collection.append({
+                'id': sensor['id'],
+                'lastValue': sensor['lastValue']})
+        return collection
+            
+        
+    def update(self, sensorId, value, time):
+        for sensor in self.temperatureSensors:
+            if sensor['id'] == sensorId:
+                sensor['history'].append({
+                    'time': time,
+                    'value': value})       
+                break
 
+    # TODO deprecated
     def notify(self, notify):
         try:
             (sensorId, value, time) = m2m.parseNotify(notify)

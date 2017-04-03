@@ -39,8 +39,15 @@ def subscribe():
 
 @app.route("/temperature/new", methods=["POST"])
 def on_new_temperature():
-    system.notify(request.json)    
-    return "", 202
+    try:
+        (sensorId, value, time) = m2m.parseNotify(request.json)
+        system.update(sensorId, value, time)
+        socketio.emit("new temperature", {
+            'id': sensorId,
+            'value': value})
+        return "", 202    
+    except ValueError:
+        pass
 
     try:
         (resourceId, value) = m2m.parseNotify(request.json)
@@ -48,6 +55,11 @@ def on_new_temperature():
     except ValueError:
         pass
     return "", 202
+
+@app.route("/temperature/last")
+def get_last_temperature():
+    collection = system.getLastValue("temperature")
+    return json.dumps(collection)
 
 @app.route("/<sensorType>/history")
 def get_sensor_history(sensorType):
