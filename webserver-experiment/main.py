@@ -9,7 +9,7 @@ import thread
 
 app = Flask(__name__)
 socketio = SocketIO(app)
-        
+
 system = system.System()
 
 def _sensorsFromType(sensorType):
@@ -23,10 +23,8 @@ def _sensorsFromType(sensorType):
         sensors = []
     return sensors
 
-def systemUpdateTemperature(sensorId, value):
-    pass
-
 def start():
+    thread.start_new_thread(system.retrieveSensorsHistory, ())
     thread.start_new_thread(subscribe, ())
 
 def subscribe():

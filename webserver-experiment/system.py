@@ -14,6 +14,14 @@ class System:
         self.luminositySensors = self._retrieveSensors("luminosity")
         self.humiditySensors = self._retrieveSensors("humidity")
 
+    def retrieveSensorsHistory(self):
+        for sensor in self.temperatureSensors:
+            sensor['history'] = m2m.getSensorHistory(sensor['uri'])
+        for sensor in self.luminositySensors:
+            sensor['history'] = m2m.getSensorHistory(sensor['uri'])
+        for sensor in self.humiditySensors:
+            sensor['history'] = m2m.getSensorHistory(sensor['uri'])
+
     def _retrieveSensors(self, sensorType):
         sensors = []
         if sensorType == "temperature":
@@ -28,7 +36,7 @@ class System:
             sensors.append({
                 'id': s,
                 'uri': sensorUris[s],
-                'history': m2m.getSensorHistory(sensorUris[s]),
+                'history': [],
                 'lastValue': m2m.getSensorLastValue(sensorUris[s])
             })
         return sensors
