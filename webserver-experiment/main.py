@@ -47,14 +47,7 @@ def on_new_temperature():
             'value': value})
         return "", 202    
     except ValueError:
-        pass
-
-    try:
-        (resourceId, value) = m2m.parseNotify(request.json)
-        systemUpdateTemperature(resourceId, value)
-    except ValueError:
-        pass
-    return "", 202
+        return "", 202
 
 @app.route("/temperature/last")
 def get_last_temperature():

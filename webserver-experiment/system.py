@@ -49,20 +49,7 @@ class System:
                 sensor['history'].append({
                     'time': time,
                     'value': value})       
-                break
-
-    # TODO deprecated
-    def notify(self, notify):
-        try:
-            (sensorId, value, time) = m2m.parseNotify(notify)
-            for sensor in self.temperatureSensors:
-                if sensor['id'] == sensorId:
-                    sensor['history'].append({
-                        'time': time,
-                        'value': value})       
-                    break
-        except ValueError:
-            pass
+                break    
         
     def random(self):
         for sensor in self.sensors:
