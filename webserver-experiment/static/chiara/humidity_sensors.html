@@ -1,18 +1,16 @@
 <!DOCTYPE html>
-<html ng-app="GreenHouseApp" lang="en">
+<html ng-app="app" lang="en">
 
   <head>
     <meta charset="utf-8">
-    <title>Umidity Sensors</title>
+    <title>Humidity Sensors</title>
     <!-- <link rel="stylesheet" href="style.css"> -->
 	
     <link rel="stylesheet" href="assets/css/bootstrap.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>
-    <script src="assets/js/m2m.js"></script>
-	
-	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-	<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
-	<link href="assets/css/asRange.min.css" rel="stylesheet" type="text/css">
+    <script src="../libs/js/angular.min.js"></script>
+    <script src="../libs/js/jquery-3.2.1.min.js"></script>
+    <script src="../libs/js/socket.io.min.js"></script>
+    <script src="../js/websocket.js"></script>
 
     <!--REQUIRED STYLE SHEETS-->
 	<style>
@@ -22,6 +20,18 @@
 		
 		.content-centered {
 			text-align: center;
+		}
+
+		.value-critical {
+			color: red;
+		}
+
+		.value-ok {
+			color: green;
+		}
+
+		.value-warning {
+			color: #f4b942;
 		}
 	</style>
 	<link rel="stylesheet" href="assets/css/industrial.css">
@@ -43,7 +53,7 @@
     <![endif]-->
 	
   </head>
-  <body ng-controller="GreenHouseController">
+  <body>
   
 	<header>
 		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -93,14 +103,14 @@
 	</div>
 	
 	
-	<div class="container center-block">
+	<div ng-controller="humiditySensorCtrl" class="container center-block">
 	  <div class="row">
-		<div class="col-md-4" ng-repeat="reading in readings">
+		<div class="col-md-4" ng-repeat="(id, value) in sensors">
 			<div class="well well-sm">
 				<div class="text-center">
-					<div class="fa fa-tint fa-4x main-color"></div>
-					<div style="margin-top: .5em; margin-bottom: .5em;">Sensore {{ $index + 1 }}</div>
-					<div style="font-size: 1.5em">{{ reading.toFixed(1) }} %</div>
+					<div class="fa fa-tint fa-4x" ng-class="getCriticalLevel(value)"></div>
+					<div style="margin-top: .5em; margin-bottom: .5em;">Sensor {{ id }}</div>
+					<div style="font-size: 1.5em">{{ value.toFixed(2) }} %</div>
 				</div><br>
 				<div>
 					<button type="submit" class="btn btn-success center-block">Clear History</button>
