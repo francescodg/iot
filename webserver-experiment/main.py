@@ -12,6 +12,7 @@ socketio = SocketIO(app)
 
 system = system.System()
 
+# TODO Deprecated
 def _sensorsFromType(sensorType):
     if sensorType == 'temperature':
         sensors = system.temperatureSensors
@@ -29,34 +30,41 @@ def start():
 
 def subscribe():
     print("Subscribing...")
-    sensors = system.temperatureSensors
-    for sensor in sensors:
+    for sensor in system.sensors["temperature"]:
         m2m.subscribe(sensor['uri'], "/temperature/new")
+        print("Subscribed to " + sensor['id'])
+    for sensor in system.sensors["humidity"]:
+        m2m.subscribe(sensor['uri'], "/humidity/new")
+        print("Subscribed to " + sensor['id'])
+    for sensor in system.sensors["luminosity"]:
+        m2m.subscribe(sensor['uri'], "/luminosity/new")
         print("Subscribed to " + sensor['id'])
     return
 
-@app.route("/temperature/new", methods=["POST"])
-def on_new_temperature():
+def _processNotify(sensorType, request):
     try:
         (sensorId, value, time) = m2m.parseNotify(request.json)
-        system.update(sensorId, value, time)
-        socketio.emit("new temperature", {
+        system.update(sensorType, sensorId, value, time)
+        socketio.emit("new " + sensorType, {
             'id': sensorId,
             'value': value})
         return "", 202    
     except ValueError:
         return "", 202
 
-@app.route("/temperature/last")
-def get_last_temperature():
-    collection = system.getLastValue("temperature")
+@app.route("/<sensorType>/new", methods=["POST"])
+def on_new_value(sensorType):
+    return _processNotify(sensorType, request)
+
+@app.route("/<sensorType>/last")
+def get_last_temperature(sensorType):    
+    collection = system.getLastValue(sensorType)
     return json.dumps(collection)
 
 @app.route("/<sensorType>/history")
 def get_sensor_history(sensorType):
-    sensors = _sensorsFromType(sensorType)
     collection = []
-    for sensor in sensors:
+    for sensor in system.sensors[sensorType]:
         collection.append({
             'id': sensor['id'],
             'history': sensor['history']})
@@ -64,9 +72,8 @@ def get_sensor_history(sensorType):
 
 @app.route("/<sensorType>/sensors")
 def get_sensors(sensorType):
-    sensors = _sensorsFromType(sensorType)
     collection = []
-    for sensor in sensors:
+    for sensor in system.sensors[sensorType]:
         collection.append({
             'id': sensor['id'], 
             'lastValue': sensor['lastValue']})

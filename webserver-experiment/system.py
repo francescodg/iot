@@ -4,15 +4,15 @@ import m2m
 
 class System:
     def __init__(self):
-        self.sensors = {
-            'Temperature_Sensor_0': [],
-            'Temperature_Sensor_1': [],
-            'Temperature_Sensor_2': [],
-            'Temperature_Average': []
-        }
         self.temperatureSensors = self._retrieveSensors("temperature")
         self.luminositySensors = self._retrieveSensors("luminosity")
         self.humiditySensors = self._retrieveSensors("humidity")
+        self.sensors = {
+            "temperature": self.temperatureSensors,
+            "humidity": self.humiditySensors,
+            "luminosity": self.luminositySensors
+        }
+
 
     def retrieveSensorsHistory(self):
         for sensor in self.temperatureSensors:
@@ -21,6 +21,7 @@ class System:
             sensor['history'] = m2m.getSensorHistory(sensor['uri'])
         for sensor in self.humiditySensors:
             sensor['history'] = m2m.getSensorHistory(sensor['uri'])
+
 
     def _retrieveSensors(self, sensorType):
         sensors = []
@@ -41,9 +42,10 @@ class System:
             })
         return sensors
 
+
     def getLastValue(self, sensorType):
         collection = []
-        for sensor in self.temperatureSensors:
+        for sensor in self.sensors[sensorType]:
             sensor['lastValue'] = m2m.getSensorLastValue(sensor['uri'])
             collection.append({
                 'id': sensor['id'],
@@ -51,24 +53,27 @@ class System:
         return collection
             
         
-    def update(self, sensorId, value, time):
-        for sensor in self.temperatureSensors:
+    def update(self, sensorType, sensorId, value, time):
+        for sensor in self.sensors[sensorType]:
             if sensor['id'] == sensorId:
                 sensor['history'].append({
                     'time': time,
-                    'value': value})       
+                    'value': value})
                 break    
         
+
     def random(self):
-        for sensor in self.sensors:
-            self.sensors[sensor].append(random.random() * 100)
+        pass
+
 
     def randomUpdate(self, index):
         return
 
+
     @property
     def averageTemperature(self):
         return 0
+
 
     @property
     def overview(self):        
