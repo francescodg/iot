@@ -12,6 +12,17 @@ socketio = SocketIO(app)
         
 system = system.System()
 
+def _sensorsFromType(sensorType):
+    if sensorType == 'temperature':
+        sensors = system.temperatureSensors
+    elif sensorType == 'luminosity':
+        sensors = system.luminositySensors
+    elif sensorType == 'humidity':
+        sensors = system.humiditySensors
+    else:
+        sensors = []
+    return sensors
+
 def systemUpdateTemperature(sensorId, value):
     pass
 
@@ -19,14 +30,18 @@ def start():
     thread.start_new_thread(subscribe, ())
 
 def subscribe():
-    resources = ["/Temperature/Temperature_Sensor_0", "/Temperature/Temperature_Sensor_1"]
-    for resource in resources:
-        m2m.subscribe(resource, "/new/temperature")
+    print("Subscribing...")
+    sensors = system.temperatureSensors
+    for sensor in sensors:
+        m2m.subscribe(sensor['uri'], "/temperature/new")
+        print("Subscribed to " + sensor['id'])
     return
 
-@app.route("/new/temperature", methods=["POST"])
+@app.route("/temperature/new", methods=["POST"])
 def on_new_temperature():
-    print(request.json)    
+    system.notify(request.json)    
+    return "", 202
+
     try:
         (resourceId, value) = m2m.parseNotify(request.json)
         systemUpdateTemperature(resourceId, value)
@@ -36,43 +51,23 @@ def on_new_temperature():
 
 @app.route("/<sensorType>/history")
 def get_sensor_history(sensorType):
+    sensors = _sensorsFromType(sensorType)
     collection = []
-    for sensor in system.temperatureSensors:
+    for sensor in sensors:
         collection.append({
             'id': sensor['id'],
             'history': sensor['history']})
     return json.dumps(collection)
 
-@app.route("/temperature/sensors/history")
-def get_temperature_history():
-
-    return get_sensor_history('')
-
-    system.random()    
-    collection = []
-    sensors = system.sensors
-    for sensor, values in sensors.iteritems():
-        history = []
-        for time in range(0, len(values)):
-            history.append({'time': time, 'value': values[time]})
-        collection.append({'id': sensor, 'history': history})
-    return json.dumps(collection)
-
 @app.route("/<sensorType>/sensors")
 def get_sensors(sensorType):
-    uris = []
-    if sensorType == "temperature":
-        uris = system.temperatureSensors
-    elif sensorType == "luminosity":
-        uris = system.luminositySensors
-    elif sensorType == "humidity":
-        uris = system.humiditySensors
-    sensors = []
-    for sensor in uris:
-        sensors.append({
+    sensors = _sensorsFromType(sensorType)
+    collection = []
+    for sensor in sensors:
+        collection.append({
             'id': sensor['id'], 
             'lastValue': sensor['lastValue']})
-    return json.dumps(sensors)
+    return json.dumps(collection)
 
 @app.route("/send")
 def send():
@@ -91,8 +86,8 @@ def timer():
   threading.Timer(5, timer).start()
 
 if __name__ == "__main__":
-    timer()    
-    # start()
+    # timer()    
+    start()
     socketio.run(app, debug=True, use_reloader=False) # To disable duplicate output (use_reloader=False)
 
 

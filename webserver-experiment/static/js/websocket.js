@@ -90,10 +90,10 @@ app.controller("temperatureGraph", function($scope, $http, $interval) {
 	    });
 
 	    for (var h in history) {
-		var time =  parseInt(h);
-		var value = sensors[s].history[h].value;	    
-		series.dataPoints.push({x: time, y: value});
-	    }	 
+	    	var time =  parseInt(h);
+	    	var value = parseFloat(sensors[s].history[h].value);
+	    	series.dataPoints.push({x: time, y: value});
+	    }
 	}
 
 	chart.render();
