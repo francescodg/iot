@@ -2,49 +2,15 @@ from flask import Flask, request, json
 from flask_socketio import SocketIO
 import random
 import m2m
+import system
 
 import threading
 import thread
 
 app = Flask(__name__)
 socketio = SocketIO(app)
-
-class System:
-    def __init__(self):
-        self.sensors = {
-            'Temperature_Sensor_0': [],
-            'Temperature_Sensor_1': [],
-            'Temperature_Sensor_2': [],
-            'Temperature_Average': []
-        } 
         
-        self.temperatureSensors = [1, 2, 3]
-
-    def random(self):
-        for sensor in self.sensors:
-            self.sensors[sensor].append(random.random() * 100)
-
-    def randomUpdate(self, index):
-        self.temperatureSensors[index] = random.randint(0, 100)
-
-    @property
-    def averageTemperature(self):
-        return sum(self.temperatureSensors) / len(self.temperatureSensors)
-
-    @property
-    def overview(self):        
-        overview = {
-            'averageTemperature': self.averageTemperature,
-            'averageHumidity': random.randint(0, 110),
-            'averageLuminosity': random.randint(0, 100),
-            'boiler': {
-                'pressure': random.randint(0, 100),
-                'fuel': random.randint(0, 100)
-            }
-        }
-        return json.dumps(overview)
-        
-system = System()
+system = system.System()
 
 def systemUpdateTemperature(sensorId, value):
     data = { 'id': 'Temperature_Sensor_' + sensorId, 'value': value }
