@@ -60,7 +60,16 @@ class System:
                     'time': time,
                     'value': value})
                 break    
-        
+
+    def clearHistory(self, sensorType, sensorName):
+        sensor = self._findSensor(sensorType, sensorName)
+        sensor['history'] = []
+        m2m.clearHistory(sensor['uri'])
+
+    def _findSensor(self, sensorType, sensorName):
+        for sensor in self.sensors[sensorType]:
+            if sensor['id'] == sensorName:
+                return sensor
 
     def random(self):
         pass

@@ -53,15 +53,26 @@ def _processNotify(sensorType, request):
         return "", 202
 
 @app.route("/<sensorType>/new", methods=["POST"])
-def on_new_value(sensorType):
+def on_new_value(sensorType):    
     return _processNotify(sensorType, request)
+    return "", 202
 
 @app.route("/<sensorType>/last")
 def get_last_temperature(sensorType):    
     collection = system.getLastValue(sensorType)
     return json.dumps(collection)
 
-@app.route("/<sensorType>/history")
+@app.route("/<sensorType>/history", methods=["DELETE"])
+def delete_sensor_history(sensorType):
+    print("Called delete")
+    if request.args.has_key("name"):
+        sensorName = request.args["name"]
+        system.clearHistory(sensorType, sensorName)
+        return "", 200
+    else:
+        return "", 404
+
+@app.route("/<sensorType>/history", methods=["GET"])
 def get_sensor_history(sensorType):
     collection = []
     for sensor in system.sensors[sensorType]:
@@ -96,8 +107,6 @@ def timer():
   threading.Timer(5, timer).start()
 
 if __name__ == "__main__":
-    # timer()    
+    # timer()
     start()
     socketio.run(app, debug=True, use_reloader=False) # To disable duplicate output (use_reloader=False)
-
-

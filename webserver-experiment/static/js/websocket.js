@@ -23,18 +23,28 @@ app.service('datasource', function() {
 		});
 	    });	
     }
+
+    this.clearHistory = function(sensorType, sensor, $http) {
+	var uri = WEBSERVER + '/' + sensorType + '/history';
+	$http.delete(uri, {params: {name: sensor}})
+	    .then(function (){ console.log("Done delete")});
+    }
 });
 
 app.controller("temperatureSensors", function($scope, $http, datasource) {
     datasource.register('temperature', $scope, $http)
 
-    $scope.getCriticalLevel = function(temperature) {
-	if (temperature >= 10 && temperature <= 30)
-	    return "temperature-ok";
-	else if (temperature < 10)
-	    return "temperature-warning";
-	else if (temperature > 30)
-	    return "temperature-critical";
+    $scope.getCriticalLevel = function(value) {
+	if (value >= 10 && value <= 30)
+	    return "value-ok";
+	else if (value < 10)
+	    return "value-warning";
+	else if (value > 30)
+	    return "value-critical";
+    }
+    
+    $scope.deleteHistory = function(sensor) {
+	datasource.clearHistory('temperature', sensor, $http)
     }
 });
 
@@ -49,6 +59,10 @@ app.controller("humiditySensorCtrl", function($scope, $http, datasource) {
 	    return "value-warning";
 	else if (value > 0.6)
 	    return "value-critical";
+    }
+
+    $scope.deleteHistory = function(sensor) {
+	datasource.clearHistory('humidity', sensor, $http)
     }
 });
 
@@ -66,8 +80,8 @@ app.controller("luminositySensorCtrl", function($scope, $http, datasource) {
     	    return "value-critical";
     }
 
-    $scope.deleteHistory = function() {
-    	console.log("delete history")
+    $scope.deleteHistory = function(sensor) {
+	datasource.clearHistory('luminosity', sensor, $http)
     }
 });
 

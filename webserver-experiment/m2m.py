@@ -9,6 +9,11 @@ def delete(uri):
 	}
 	return requests.delete(uri, headers=headers)
 
+def clearHistory(uri):
+        r = _getContentInstances(uri)
+        contentInstances = r.json()["m2m:uril"].split()
+        for contentInstance in contentInstances:
+                delete(M2M_HOST + contentInstance)
 	
 def subscribe(resource, notificationUri):
 	notificationUri = "http://localhost:5000" + notificationUri
@@ -37,6 +42,8 @@ def getResourceNameById(identifier):
 	
 def parseNotify(notify):
 	if notify['m2m:sgn'].has_key('nev'):
+                if notify['m2m:sgn']['nev']['rss'] == 2:
+                        raise ValueError # Ignore Delete notify
 		value = notify['m2m:sgn']['nev']['rep']['con']
                 time = notify['m2m:sgn']['nev']['rep']['lt']
 		resourceId = notify['m2m:sgn']['nev']['rep']['pi']

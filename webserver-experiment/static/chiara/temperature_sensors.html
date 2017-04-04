@@ -22,15 +22,15 @@
 			text-align: center;
 		}
 
-		.temperature-critical {
+		.value-critical {
 			color: red;
 		}
 
-		.temperature-ok {
+		.value-ok {
 			color: green;
 		}
 
-		.temperature-warning {
+		.value-warning {
 			color: yellow;
 		}
 	</style>
@@ -105,15 +105,15 @@
 	
 	<div ng-controller="temperatureSensors" class="container center-block">
 	  <div class="row">
-		<div class="col-md-4" ng-repeat="(sensor, temperature) in temperatureSensors">
+		<div class="col-md-4" ng-repeat="(sensor, value) in sensors">
 			<div class="well well-sm">
 				<div class="text-center">
-					<div ng-model="ok" class="fa fa-thermometer-three-quarters fa-4x" ng-class="getCriticalLevel(temperature)" ></div>
+					<div ng-model="ok" class="fa fa-thermometer-three-quarters fa-4x" ng-class="getCriticalLevel(value)" ></div>
 					<div style="margin-top: .5em; margin-bottom: .5em;">Sensor {{ sensor }}</div>
-					<div style="font-size: 1.5em">{{ temperature }} °C</div>
+					<div style="font-size: 1.5em">{{ value }} °C</div>
 				</div><br>
 				<div>
-					<button type="submit" class="btn btn-success center-block">Clear History</button>
+					<button ng-click="deleteHistory(sensor)" class="btn btn-success center-block">Clear History</button>
 				</div>
 			</div>
 	    </div>
