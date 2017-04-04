@@ -40,7 +40,8 @@ def parseNotify(notify):
 		value = notify['m2m:sgn']['nev']['rep']['con']
                 time = notify['m2m:sgn']['nev']['rep']['lt']
 		resourceId = notify['m2m:sgn']['nev']['rep']['pi']
-		resourceName = getResourceNameById(resourceId)		
+		resourceName = getResourceNameById(resourceId)\
+                        .replace('Brightness', 'Luminosity')
 		return (resourceName, value, time)
 	else:
 		raise ValueError

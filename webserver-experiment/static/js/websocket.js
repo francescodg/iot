@@ -72,6 +72,46 @@ app.controller("humiditySensorCtrl", function($scope, $http) {
 });
 
 
+app.controller("luminositySensorCtrl", function($scope, $http) {
+    var sensorType = "luminosity";
+
+    // XXX.(sensorType, $scope)
+
+    $scope.sensors = new Object();
+    $http.get(WEBSERVER + '/'+ sensorType + '/last', null)
+	.then(function success(response) {
+	    var sensors = response.data;
+	    for (var s in sensors) {
+	    	var id = sensors[s].id;
+	    	var value = parseFloat(sensors[s].lastValue);
+	    	$scope.sensors[id] = value;
+	    }
+	    var socket = io.connect(WEBSERVER);
+	    socket.on('new ' + sensorType, _onNewValue);
+	});
+
+    function _onNewValue(data) {
+	console.log(data)
+	var value = parseFloat(data.value)
+	$scope.sensors[data.id] = value;
+	$scope.$apply();
+    }
+
+    $scope.getCriticalLevel = function(value) {
+	if (value >= 0.1 && value <= 0.6)
+	    return "value-ok";
+	else if (value < 0.1)
+	    return "value-warning";
+	else if (value > 0.6)
+	    return "value-critical";
+    }
+
+    $scope.deleteHistory = function() {
+	console.log("delete history")
+    }
+});
+
+
 app.controller("temperatureGraph", function($scope, $http, $interval) {
     var chart = _createGraph("chartContainer", "Temperature History", function(){ chart.render(); });
     

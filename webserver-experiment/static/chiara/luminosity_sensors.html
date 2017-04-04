@@ -1,18 +1,16 @@
 <!DOCTYPE html>
-<html ng-app="GreenHouseApp" lang="en">
+<html ng-app="app" lang="en">
 
   <head>
     <meta charset="utf-8">
-    <title>Brightness Sensors</title>
+    <title>Luminosity Sensors</title>
     <!-- <link rel="stylesheet" href="style.css"> -->
 	
     <link rel="stylesheet" href="assets/css/bootstrap.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>
-    <script src="assets/js/m2m.js"></script>
-	
-	<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-	<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
-	<link href="assets/css/asRange.min.css" rel="stylesheet" type="text/css">
+    <script src="../libs/js/angular.min.js"></script>
+    <script src="../libs/js/jquery-3.2.1.min.js"></script>
+    <script src="../libs/js/socket.io.min.js"></script>
+    <script src="../js/websocket.js"></script>
 
     <!--REQUIRED STYLE SHEETS-->
 	<style>
@@ -22,6 +20,18 @@
 		
 		.content-centered {
 			text-align: center;
+		}
+
+		.value-critical {
+			color: red;
+		}
+
+		.value-ok {
+			color: green;
+		}
+
+		.value-warning {
+			color: #f4b942;
 		}
 	</style>
 	<link rel="stylesheet" href="assets/css/industrial.css">
@@ -43,7 +53,7 @@
     <![endif]-->
 	
   </head>
-  <body ng-controller="GreenHouseController">
+  <body>
   
 	<header>
 		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -53,8 +63,8 @@
 						<span class="sr-only">Toggle navigation</span>
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
-						<!--<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
+						<!--<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>-->
@@ -63,22 +73,22 @@
 				</div>
 				<div class="collapse navbar-collapse navbar-ex1-collapse">
 					<ul class="nav navbar-nav navbar-right">
-						<li><a href="graph_brightness_sensors.html">Graph Value</a>
+						<li><a href="graph_umidity_sensors.html">Graph Value</a>
 						</li>
-						<!--<li><a href="#list-page">GreenHouse List</a>
-						</li>
-
-						<li><a href="#services-page">General Overview</a>
+						<!--<li><a href="index.html#list-page">GreenHouse List</a>
 						</li>
 
-						<li><a href="#heating-page">Heating</a>
+						<li><a href="index.html#services-page">General Overview</a>
+						</li>
+
+						<li><a href="index.html#heating-page">Heating</a>
 						</li>
 						
-						<li><a href="#nebulizer-page">Nebulizer</a>
+						<li><a href="index.html#nebulizer-page">Nebulizer</a>
 						</li>
-						<li><a href="#shading-page">Shading</a>
+						<li><a href="index.html#shading-page">Shading</a>
 						</li>
-						<li><a href="#contact-page">Contact</a>
+						<li><a href="index.html#contact-page">Contact</a>
 						</li>-->
 					</ul>
 				</div>
@@ -88,22 +98,22 @@
   
 	<div style="margin-top: 3em" class="row text-center">
 		<div class="col-md-8 col-md-offset-2">
-			<h2><i class="fa fa-list-alt"></i>&nbsp;Brightness Sensors</h2>
+			<h2><i class="fa fa-list-alt"></i>&nbsp;Luminosity Sensors</h2>
 		</div>
 	</div>
 	
 	
-	<div class="container center-block">
+	<div ng-controller="luminositySensorCtrl" class="container center-block">
 	  <div class="row">
-		<div class="col-md-4" ng-repeat="reading in readings">
+		<div class="col-md-4" ng-repeat="(id, value) in sensors">
 			<div class="well well-sm">
 				<div class="text-center">
-					<div class="fa fa-sun-o fa-4x main-color"></div>
-					<div style="margin-top: .5em; margin-bottom: .5em;">Sensore {{ $index + 1 }}</div>
-					<div style="font-size: 1.5em">{{ reading.toFixed(1) }} %</div>
+					<div class="fa fa-sun-o fa-4x" ng-class="getCriticalLevel(value)"></div>
+					<div style="margin-top: .5em; margin-bottom: .5em;">Sensor {{ id }}</div>
+					<div style="font-size: 1.5em">{{ value.toFixed(2) }} %</div>
 				</div><br>
 				<div>
-					<button type="submit" class="btn btn-success center-block">Clear History</button>
+					<button ng-click="deleteHistory()" class="btn btn-success center-block">Clear History</button>
 				</div>
 			</div>
 	    </div>
