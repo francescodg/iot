@@ -97,24 +97,28 @@ def get_temperature_sensors_page(sensorType):
         'temperature': {
             'title': "Temperature Sensor",
             'controller': "temperatureSensors",
-            'icon': "fa-thermometer-three-quarters"
+            'icon': "fa-thermometer-three-quarters",
+            'graphPage': 'graph_temperature'
         },
         'humidity': {
             'title': "Humidity Sensor",
             'controller': "humiditySensorCtrl",
-            'icon': "fa-tint"
+            'icon': "fa-tint",
+            'graphPage': 'graph_humidity'
         },
         'luminosity': {
             'title': "Luminosity Sensor",
             'controller': "luminositySensorCtrl",
-            'icon': "fa-sun-o"
+            'icon': "fa-sun-o",
+            'graphPage': 'graph_luminosity'
         }
     }
     
     return render_template("chiara/sensors.html",
                            title=attr[sensorType]['title'], 
                            controller=attr[sensorType]['controller'],
-                           icon=attr[sensorType]['icon'])
+                           icon=attr[sensorType]['icon'],
+                           graphPage=attr[sensorType]['graphPage'])
 @app.route("/send")
 def send():
     print("Request on send")
