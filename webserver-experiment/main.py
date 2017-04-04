@@ -1,4 +1,4 @@
-from flask import Flask, request, json
+from flask import Flask, request, json, render_template
 from flask_socketio import SocketIO
 import random
 import m2m
@@ -7,7 +7,7 @@ import system
 import threading
 import thread
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder="static/")
 socketio = SocketIO(app)
 
 system = system.System()
@@ -90,6 +90,31 @@ def get_sensors(sensorType):
             'lastValue': sensor['lastValue']})
     return json.dumps(collection)
 
+@app.route("/static/chiara/<sensorType>_sensors")
+def get_temperature_sensors_page(sensorType):
+
+    attr = {
+        'temperature': {
+            'title': "Temperature Sensor",
+            'controller': "temperatureSensors",
+            'icon': "fa-thermometer-three-quarters"
+        },
+        'humidity': {
+            'title': "Humidity Sensor",
+            'controller': "humiditySensorCtrl",
+            'icon': "fa-tint"
+        },
+        'luminosity': {
+            'title': "Luminosity Sensor",
+            'controller': "luminositySensorCtrl",
+            'icon': "fa-sun-o"
+        }
+    }
+    
+    return render_template("chiara/sensors.html",
+                           title=attr[sensorType]['title'], 
+                           controller=attr[sensorType]['controller'],
+                           icon=attr[sensorType]['icon'])
 @app.route("/send")
 def send():
     print("Request on send")
