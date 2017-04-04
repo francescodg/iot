@@ -3,31 +3,30 @@ var WEBSERVER = "http://127.0.0.1:5000";
 
 app = angular.module("app", []);
 
-
-app.controller("temperatureSensors", function($scope, $http) {
-    $scope.temperatureSensors = new Object();
-    $http.get(WEBSERVER + '/temperature/last', null)
-	.then(function success(response) {
-	    var sensors = response.data;
-	    for (var s in sensors) {
-		var id = sensors[s].id;
-		var value = sensors[s].lastValue;
-		$scope.temperatureSensors[id] = value.toFixed(1);
-	    }
-	    waitForEvent();
-	});
-
-    function waitForEvent() {
-	var socket = io.connect(WEBSERVER);
-	socket.on('new temperature', onNewTemperature);
+app.service('datasource', function() {
+    this.register = function(sensorType, $scope, $http) {
+	$scope.sensors = new Object();
+	$http.get(WEBSERVER + '/'+ sensorType + '/last', null)
+	    .then(function success(response) {
+		var sensors = response.data;
+		for (var s in sensors) {
+	    	    var id = sensors[s].id;
+	    	    var value = parseFloat(sensors[s].lastValue);
+	    	    $scope.sensors[id] = value;
+		}
+		var socket = io.connect(WEBSERVER);
+		socket.on('new ' + sensorType, function(data){
+		    console.log(data)
+		    var value = parseFloat(data.value)
+		    $scope.sensors[data.id] = value;
+		    $scope.$apply();
+		});
+	    });	
     }
+});
 
-    function onNewTemperature(data) {
-	console.log(data)
-	var value = parseFloat(data.value).toFixed(1)
-	$scope.temperatureSensors[data.id] = value;
-	$scope.$apply();
-    }
+app.controller("temperatureSensors", function($scope, $http, datasource) {
+    datasource.register('temperature', $scope, $http)
 
     $scope.getCriticalLevel = function(temperature) {
 	if (temperature >= 10 && temperature <= 30)
@@ -39,20 +38,9 @@ app.controller("temperatureSensors", function($scope, $http) {
     }
 });
 
-app.controller("humiditySensorCtrl", function($scope, $http) {
-    $scope.sensors = new Object();
-
-    $http.get(WEBSERVER + '/humidity/last', null)
-	.then(function success(response) {
-	    var sensors = response.data;
-	    for (var s in sensors) {
-	    	var id = sensors[s].id;
-	    	var value = parseFloat(sensors[s].lastValue);
-	    	$scope.sensors[id] = value;
-	    }
-	    var socket = io.connect(WEBSERVER);
-	    socket.on('new humidity', _onNewValue);
-	});
+app.controller("humiditySensorCtrl", function($scope, $http, datasource) {
+    
+    datasource.register("humidity", $scope, $http)
 
     $scope.getCriticalLevel = function(value) {
 	if (value >= 0.1 && value <= 0.6)
@@ -61,53 +49,25 @@ app.controller("humiditySensorCtrl", function($scope, $http) {
 	    return "value-warning";
 	else if (value > 0.6)
 	    return "value-critical";
-    }
-
-    function _onNewValue(data) {
-	console.log(data)
-	var value = parseFloat(data.value)
-	$scope.sensors[data.id] = value;
-	$scope.$apply();
     }
 });
 
 
-app.controller("luminositySensorCtrl", function($scope, $http) {
-    var sensorType = "luminosity";
+app.controller("luminositySensorCtrl", function($scope, $http, datasource) {
 
-    // XXX.(sensorType, $scope)
-
-    $scope.sensors = new Object();
-    $http.get(WEBSERVER + '/'+ sensorType + '/last', null)
-	.then(function success(response) {
-	    var sensors = response.data;
-	    for (var s in sensors) {
-	    	var id = sensors[s].id;
-	    	var value = parseFloat(sensors[s].lastValue);
-	    	$scope.sensors[id] = value;
-	    }
-	    var socket = io.connect(WEBSERVER);
-	    socket.on('new ' + sensorType, _onNewValue);
-	});
-
-    function _onNewValue(data) {
-	console.log(data)
-	var value = parseFloat(data.value)
-	$scope.sensors[data.id] = value;
-	$scope.$apply();
-    }
+    datasource.register("luminosity", $scope, $http)
 
     $scope.getCriticalLevel = function(value) {
-	if (value >= 0.1 && value <= 0.6)
-	    return "value-ok";
-	else if (value < 0.1)
-	    return "value-warning";
-	else if (value > 0.6)
-	    return "value-critical";
+    	if (value >= 0.1 && value <= 0.6)
+    	    return "value-ok";
+    	else if (value < 0.1)
+    	    return "value-warning";
+    	else if (value > 0.6)
+    	    return "value-critical";
     }
 
     $scope.deleteHistory = function() {
-	console.log("delete history")
+    	console.log("delete history")
     }
 });
 
