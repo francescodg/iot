@@ -43,7 +43,8 @@ class System:
         return sensors
 
 
-    def getLastValue(self, sensorType):
+    # TODO Deprecated    
+    def __getLastValue(self, sensorType):
         collection = []
         for sensor in self.sensors[sensorType]:
             sensor['lastValue'] = m2m.getSensorLastValue(sensor['uri'])
@@ -51,7 +52,11 @@ class System:
                 'id': sensor['id'],
                 'lastValue': sensor['lastValue']})
         return collection
-            
+
+
+    def getLastValue(self, sensor):
+        return m2m.getSensorLastValue(sensor['uri'])
+
         
     def update(self, sensorType, sensorId, value, time):
         for sensor in self.sensors[sensorType]:

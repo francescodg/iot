@@ -57,11 +57,6 @@ def on_new_value(sensorType):
     return _processNotify(sensorType, request)
     return "", 202
 
-@app.route("/<sensorType>/last")
-def get_last_temperature(sensorType):    
-    collection = system.getLastValue(sensorType)
-    return json.dumps(collection)
-
 @app.route("/<sensorType>/history", methods=["DELETE"])
 def delete_sensor_history(sensorType):
     print("Called delete")
@@ -75,32 +70,22 @@ def delete_sensor_history(sensorType):
 @app.route("/<sensorType>/history", methods=["GET"])
 def get_sensor_history(sensorType):
     collection = []
-
-    import copy
-    ss = copy.deepcopy(system.sensors[sensorType][0])
-
     for sensor in system.sensors[sensorType]:
-        collection.append({
-            'id': sensor['id'],
-            'history': sensor['history']})
-
-        
-    for h in ss['history']:
-        h['value'] += 1;
-
-    collection.append({
-        'id': sensorType[0].upper() + sensorType[1:] + "_Average",
-        'history': ss['history']
-    })
+        if len(sensor['history']) > 0:
+            collection.append({
+                'id': sensor['id'],
+                'history': sensor['history']})
     return json.dumps(collection)
 
-@app.route("/<sensorType>/sensors")
+@app.route("/<sensorType>/last")
 def get_sensors(sensorType):
     collection = []
     for sensor in system.sensors[sensorType]:
-        collection.append({
-            'id': sensor['id'], 
-            'lastValue': sensor['lastValue']})
+        value = system.getLastValue(sensor)
+        if value != None:
+            collection.append({
+                'id': sensor['id'], 
+                'lastValue': value})
     return json.dumps(collection)
 
 @app.route("/static/chiara/<sensorType>_sensors")

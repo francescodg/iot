@@ -78,7 +78,7 @@ def getHumiditySensors():
 
 def getLuminositySensors():
         sensors = {}
-	r = _getContainers("/mn-cse/mn-name/Brightness")
+	r = _getContainers("/mn-cse/mn-name/Luminosity")
         if r.status_code == 200:
                 for sensorUri in r.json()['m2m:uril'].split():
                         key = sensorUri.split('/')[-1].\
@@ -91,8 +91,11 @@ def getSensorHistory(sensorUri):
         history = []
         r = _getContentInstances(sensorUri)
 
-        if (r.status_code == 200):
-                for contentInstanceUri in r.json()["m2m:uril"].split():
+        if (r.status_code == 200):              
+                uris = r.json()["m2m:uril"]
+                if len(uris) == 0:
+                        return history
+                for contentInstanceUri in uris.split():
                         r = requests.get(
                                 M2M_HOST + contentInstanceUri,
                                 headers=_createHeader())
@@ -105,8 +108,11 @@ def getSensorHistory(sensorUri):
 
 
 def getSensorLastValue(sensorUri):
-        r = _getLastValue(sensorUri)
-        return float(r.json()["m2m:cin"]["con"])
+        r = _getLastValue(sensorUri)                
+        if r.status_code == 200:
+                return float(r.json()["m2m:cin"]["con"])
+        else:
+                return None
 
 
 def _getLastValue(container):
