@@ -48,18 +48,20 @@ def _processNotify(sensorType, request):
         socketio.emit("new " + sensorType, {
             'id': sensorId,
             'value': value})
+        average = system.getSensorsAverage(sensorType)
+        if average != None:
+            socketio.emit('new {0} average'.format(sensorType), 
+                          {'data': average})
         return "", 202    
     except ValueError:
         return "", 202
 
 @app.route("/<sensorType>/new", methods=["POST"])
-def on_new_value(sensorType):    
+def on_new_value(sensorType):
     return _processNotify(sensorType, request)
-    return "", 202
 
 @app.route("/<sensorType>/history", methods=["DELETE"])
 def delete_sensor_history(sensorType):
-    print("Called delete")
     if request.args.has_key("name"):
         sensorName = request.args["name"]
         system.clearHistory(sensorType, sensorName)

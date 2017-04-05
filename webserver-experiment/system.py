@@ -103,9 +103,9 @@ class System:
     @property
     def overview(self):        
         overview = {
-            'averageTemperature': random.randint(0, 100),
-            'averageHumidity': random.randint(0, 110),
-            'averageLuminosity': random.randint(0, 100),
+            'averageTemperature': self.getSensorsAverage('temperature'),
+            'averageHumidity': self.getSensorsAverage('humidity'),
+            'averageLuminosity': self.getSensorsAverage('luminosity'),
             'boiler': {
                 'pressure': random.randint(0, 100),
                 'fuel': random.randint(0, 100)

@@ -1,9 +1,13 @@
 var WEBSERVER = "http://127.0.0.1:5000";
 
-
 app = angular.module("app", []);
 
-app.service('datasource', function() {
+app.service('socket', function() {
+    console.log("Called socket")
+    return io.connect(WEBSERVER);
+});
+
+app.service('datasource', ['socket', function(socket) {
     this.register = function(sensorType, $scope, $http) {
 	$scope.sensors = new Object();
 	$http.get(WEBSERVER + '/'+ sensorType + '/last', null)
@@ -14,7 +18,6 @@ app.service('datasource', function() {
 	    	    var value = parseFloat(sensors[s].lastValue);
 	    	    $scope.sensors[id] = value;
 		}
-		var socket = io.connect(WEBSERVER);
 		socket.on('new ' + sensorType, function(data){
 		    console.log(data)
 		    var value = parseFloat(data.value)
@@ -29,7 +32,7 @@ app.service('datasource', function() {
 	$http.delete(uri, {params: {name: sensor}})
 	    .then(function (){ console.log("Done delete")});
     }
-});
+}]);
 
 app.service('graphsource', function() {
     var chart;
@@ -232,7 +235,7 @@ function _createSeries(color) {
     };
 }
 
-app.controller("overviewCtrl", function($scope, $http, $timeout){
+app.controller("overviewCtrl", function($scope, $http, $timeout, socket){
 
     console.log("overviewCtrl")
 
@@ -241,7 +244,6 @@ app.controller("overviewCtrl", function($scope, $http, $timeout){
 	    $timeout(function(){
 		_updateScope(response.data)
 	    }, 0);
-	    var socket = io.connect(WEBSERVER);
 	    socket.on('new overview', function(data) {		
 		$timeout(function(){
 		    var overview = JSON.parse(data);
@@ -258,3 +260,86 @@ app.controller("overviewCtrl", function($scope, $http, $timeout){
 	$scope.boilerPressure = overview.boiler.pressure;
     }
 });
+
+
+app.controller("heatingCtrl", function($scope, $http, socket, $timeout){
+    var indicator;
+
+    angular.element(function(){
+	indicator = $('#averageTemperatureIndicator');
+	indicator.industrial({})
+    });
+
+    $http.get(WEBSERVER + '/temperature/average')
+	.then(function(response){
+	    var value = response.data.average;
+	    $scope.averageTemperature = value;
+	    if (indicator) 
+	    	indicator.industrial(value);
+	});
+
+    socket.on('new temperature average', function(obj) {
+	console.log('on new temperature average', obj.data)
+	$timeout(function() {
+	    $scope.averageTemperature = obj.data;
+	}, 0);
+	if (indicator) 
+	    indicator.industrial(obj.data);
+    });
+
+    $scope.boilerPressure = Math.random() * 100;
+    $scope.boilerFuel = Math.random() * 100;
+});
+
+
+app.controller("nebulizerCtrl", function($scope, $http, socket, $timeout){
+    var indicator;
+
+    angular.element(function(){
+	indicator = $('#averageHumidityIndicator');
+	indicator.industrial({})
+    });
+
+    $http.get(WEBSERVER + '/humidity/average')
+	.then(function(response) {
+	    var value = response.data.average
+	    $scope.averageHumidity = value;
+	    if (indicator)
+		indicator.industrial(value)
+	});
+
+    socket.on('new humidity average', function(obj) {	
+	console.log('on new humidity average', obj.data)
+	$timeout(function() {
+	    $scope.averageHumidity = obj.data;
+	}, 0);
+	if (indicator) 
+	    indicator.industrial(obj.data);
+    });
+}); 
+
+app.controller("shadingCtrl", function($scope, $http, socket, $timeout){
+    var indicator;
+
+    angular.element(function(){
+	indicator = $('#averageLuminosityIndicator');
+	indicator.industrial({})
+    });
+
+    $http.get(WEBSERVER + '/luminosity/average')
+	.then(function(response) {
+	    var value = response.data.average;
+	    $scope.averageLuminosity = value;
+	    if (indicator)
+		indicator.industrial(value)
+	});
+
+    socket.on('new luminosity average', function (obj) {
+	console.log('on new luminosity average', obj.data)
+	$timeout(function() {
+	    $scope.averageLuminosity = obj.data;
+	}, 0);
+	if (indicator) 
+	    indicator.industrial(obj.data);
+    });
+}); 

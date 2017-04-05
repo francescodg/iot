@@ -5,6 +5,7 @@
 <!--[if (gte IE 9)|!(IE)]><!-->
 <html class="no-js" lang="en">
 <!--<![endif]-->
+<html ng-app="app">
 <head>
     <meta charset="utf-8">
 	
@@ -94,7 +95,7 @@
     <![endif]-->
 </head>
 
-<body ng-app="app" onload="init()">	
+<body onload="init()">	
     <header>
 		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 			<div class="container">
@@ -349,7 +350,7 @@
     </section>
 
     <section  id="heating-page">
-        <div class="container">
+        <div ng-controller="heatingCtrl" class="container">
             <div class="row text-center">
                 <div class="col-md-8 col-md-offset-2">
                     <h2><i class="fa fa-thermometer-three-quarters main-color" aria-hidden="true"></i>&nbsp;Heating</h2>
@@ -403,7 +404,7 @@
 										<div>
 											<h4 class="text-center"><i class="fa fa-bar-chart fa-2x main-color" aria-hidden="true"></i>&nbsp;Pressure Boiler</h4>
 											<p class="text-center">
-												VALUE PSI
+												{{ boilerPressure.toFixed(2) }} PSI
 											</p>
 										</div>
 									</div>
@@ -412,7 +413,7 @@
 										<div >
 											<h4 class="text-center"><i class="fa fa-fire fa-2x main-color"></i>&nbsp;Fuel Boiler</h4>
 											<p class="text-center">
-												VALUE %
+												{{ boilerFuel.toFixed(2) }} %
 											</p>
 										</div>
 									</div>
@@ -460,7 +461,7 @@
 								<div class="row text-center space-pad">
 									<div class="center-block">
 										<div >
-											<div id="avgTempInd" class="industrial thermometer size one center-block"> <span class="ticks" data-amount="11" data-scale-freq="5"></span>
+											<div id="averageTemperatureIndicator" class="industrial thermometer size one center-block"> <span class="ticks" data-amount="11" data-scale-freq="5"></span>
 												<div class="space"></div>
 												<div class="meter safe"></div>
 											</div>
@@ -473,12 +474,12 @@
 								<div class="row">
 									<div>
 										<h4 class="text-center"><i class="fa fa-thermometer-three-quarters fa-2x main-color" aria-hidden="true"></i>&nbsp;Average Temperature</h4>
-										<p ng-controller="overviewCtrl" class="avgTempValue text-center">
+										<p class="text-center">
 											{{ averageTemperature }} C°
 										</p>
 										<div style="margin-top: -1.7em">
-											<a href="temperature_sensors.html" class="btn btn-success">Thermometers List</a><br><br>
-											<a href="graph_temperature_sensors.html" class="btn btn-success">Thermometers Chart</a>
+											<a href="temperature_sensors" class="btn btn-success">Thermometers List</a><br><br>
+											<a href="temperature_graph" class="btn btn-success">Thermometers Chart</a>
 										</div>
 									</div>
 								</div>
@@ -503,7 +504,7 @@
     </section>
 	
     <section  id="nebulizer-page">
-        <div class="container">
+        <div ng-controller="nebulizerCtrl" class="container">
             <div class="row text-center">
                 <div class="col-md-8 col-md-offset-2">
                     <h2><i class="fa fa-tint main-color"></i>&nbsp;Nebulizer</h2>
@@ -536,14 +537,14 @@
                         </ul>
                     </div>
 
-                    <div ng-controller="overviewCtrl" class="col-md-3 col-sm-6">
+                    <div class="col-md-3 col-sm-6">
                         <ul class="plan">
                             <li class="plan-head">GREENHOUSE HUMIDITY</li> 
                             <li>
 								<div class="row text-center space-pad">
 									<div class="center-block">
 										<div >
-											<div class="industrial gauge size one center-block"><span class="ticks" data-amount="21" data-scale-freq="5"></span>
+											<div id="averageHumidityIndicator" class="industrial gauge size one center-block"><span class="ticks" data-amount="21" data-scale-freq="5"></span>
 												<div class="space"></div>
 												<div class="meter"></div>
 											</div>
@@ -556,13 +557,13 @@
 								<div class="row text-center space-pad">
 									<div>
 										<h4 class="text-center"><i class="fa fa-tint fa-2x main-color" aria-hidden="true"></i>&nbsp;Average Humidity</h4>
-										<p class="avgTempValue text-center">
-											{{ averageTemperature }} %
+										<p class="text-center">
+											{{ averageHumidity }} %
 										</p>
 									</div>
 									<div style="margin-top: -1.7em">
-										<a href="umidity_sensors.html" class="btn btn-success">Humidity Sensor List</a><br><br>
-										<a href="graph_umidity_sensors.html" class="btn btn-success">Humidity Sensor Chart</a>
+										<a href="humidity_sensors" class="btn btn-success">Humidity Sensor List</a><br><br>
+										<a href="humidity_graph" class="btn btn-success">Humidity Sensor Chart</a>
 									</div>
 								</div>
 							</li><br>
@@ -588,7 +589,7 @@
     </section>
 	
     <section  id="shading-page">
-        <div class="container">
+        <div ng-controller="shadingCtrl" class="container">
             <div class="row text-center">
                 <div class="col-md-8 col-md-offset-2">
                     <h2><i class="fa fa-sun-o main-color"></i>&nbsp;Shading</h2>
@@ -715,7 +716,7 @@
 								<div class="row text-center space-pad">
 									<div class="center-block">
 										<div >
-											<div class="industrial gauge size one center-block"><span class="ticks" data-amount="21" data-scale-freq="5"></span>
+											<div id="averageLuminosityIndicator" class="industrial gauge size one center-block"><span class="ticks" data-amount="21" data-scale-freq="5"></span>
 												<div class="space"></div>
 												<div class="meter"></div>
 											</div>
@@ -728,13 +729,13 @@
 								<div class="row text-center space-pad">
 									<div>
 										<h4 class="text-center"><i class="fa fa-sun-o fa-2x main-color" aria-hidden="true"></i>&nbsp;Average Luminosity</h4>
-										<p ng-controller="overviewCtrl" class="text-center">
+										<p class="text-center">
 											{{ averageLuminosity }} %
 										</p>
 									</div>
 									<div style="margin-top: -1.7em">
-										<a href="brightness_sensors.html" class="btn btn-success">Luminosity Sensor List</a><br><br>
-										<a href="graph_brightness_sensors.html" class="btn btn-success">Luminosity Sensor Chart</a>
+										<a href="luminosity_sensors" class="btn btn-success">Luminosity Sensor List</a><br><br>
+										<a href="luminosity_graph" class="btn btn-success">Luminosity Sensor Chart</a>
 									</div>
 								</div>
 							</li><br>
@@ -804,7 +805,7 @@
 	<script src="assets/js/bootstrap-number-input.js"></script>
 	<script src="assets/js/jquery-asRange.min.js"></script>
 	<script src="assets/js/industrial.js"></script> 
-	<script src="assets/js/app.js"></script> 
+	<!--<script src="assets/js/app.js"></script> -->
 	<script src="assets/js/intro.min.js"></script>
 	<script type="text/javascript">
 	  var _gaq = _gaq || [];
