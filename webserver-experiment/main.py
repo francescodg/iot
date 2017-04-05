@@ -75,10 +75,23 @@ def delete_sensor_history(sensorType):
 @app.route("/<sensorType>/history", methods=["GET"])
 def get_sensor_history(sensorType):
     collection = []
+
+    import copy
+    ss = copy.deepcopy(system.sensors[sensorType][0])
+
     for sensor in system.sensors[sensorType]:
         collection.append({
             'id': sensor['id'],
             'history': sensor['history']})
+
+        
+    for h in ss['history']:
+        h['value'] += 1;
+
+    collection.append({
+        'id': sensorType[0].upper() + sensorType[1:] + "_Average",
+        'history': ss['history']
+    })
     return json.dumps(collection)
 
 @app.route("/<sensorType>/sensors")

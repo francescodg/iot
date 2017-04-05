@@ -31,6 +31,75 @@ app.service('datasource', function() {
     }
 });
 
+app.service('graphsource', function() {
+    var chart;
+    var uri;
+    var color;
+    var average;
+    var http;
+
+    this.create = function(_chart, _uri, _average, _color, _http) {
+	chart = _chart;
+	uri = _uri;
+	average = _average;
+	color = _color;
+	http = _http;
+    }
+
+    this.update = function() {
+	http.get(WEBSERVER + uri).then(onNewData)
+    }
+
+    function onNewData(response) {
+	console.log(response.data)
+	// Sort sensors' id for cleaner legend 
+	var sensors = response.data.sort(function(a, b){
+	    if (a.id < b.id)
+		return -1;
+	    if (a.id > b.id)
+		return 1;
+	    else
+		return 0;
+	});
+
+	for (var s in sensors) {
+	    var series;	    
+	    if (chart.options.data[s] == undefined) {
+		if (sensors[s].id == average) {
+		    series = _createSeries(color);
+		    series.name = "Average"
+		} else {
+		    series = _createSeries("grey");
+		    series.name = sensors[s].id;
+		}
+		chart.options.data[s] = series;
+	    } else {
+		series = chart.options.data[s];
+		series.dataPoints = new Array();
+	    }
+
+	    // Sort timestamp
+	    var history = sensors[s].history.sort(function(a, b){
+		if (a.time < b.time)
+		    return -1;
+		if (a.time > b.time)
+		    return 1;
+		else 
+		    return 0;
+	    });
+
+	    for (var h in history) {
+	    	var time =  parseInt(h);
+	    	var value = parseFloat(sensors[s].history[h].value);
+	    	series.dataPoints.push({x: time, y: value});
+	    }
+	}
+
+	chart.render();
+    }
+
+});
+
 app.controller("temperatureSensors", function($scope, $http, datasource) {
     datasource.register('temperature', $scope, $http)
 
@@ -86,72 +155,39 @@ app.controller("luminositySensorCtrl", function($scope, $http, datasource) {
 });
 
 
-app.controller("temperatureGraph", function($scope, $http, $interval) {
-    var chart = _createGraph("chartContainer", "Temperature History", function(){ chart.render(); });
-    
-    update();
-    $interval(update, 10000);
-    
-    function update() {
-    	$http.get(WEBSERVER + "/temperature/history")
-    	    .then(onNewData)
-    }
+app.controller("temperatureGraph", function($http, $interval, graphsource) {
+    var chart = _createGraph("chartContainer", 
+			     "Temperature History",
+			     function(){ chart.render(); });    
+    graphsource.create(chart, "/temperature/history", "Temperature_Average", "green", $http);
 
-    function onNewData(response) {
-	console.log('temperatureGraph', response.data)
-
-	// Sort sensors' id for cleaner legend 
-	var sensors = response.data.sort(function(a, b){
-	    if (a.id < b.id)
-		return -1;
-	    if (a.id > b.id)
-		return 1;
-	    else
-		return 0;
-	});
-
-	for (var s in sensors) {
-	    var series;	    
-	    if (chart.options.data[s] == undefined) {
-		if (sensors[s].id == "Temperature_Average") {
-		    series = _createSeries("green");
-		    series.name = "Average"
-		} else {
-		    series = _createSeries("grey");
-		    series.name = sensors[s].id;
-		}
-		chart.options.data[s] = series;
-	    } else {
-		series = chart.options.data[s];
-		series.dataPoints = new Array();
-	    }
-
-	    // Sort timestamp
-	    var history = sensors[s].history.sort(function(a, b){
-		if (a.time < b.time)
-		    return -1;
-		if (a.time > b.time)
-		    return 1;
-		else 
-		    return 0;
-	    });
-
-	    for (var h in history) {
-	    	var time =  parseInt(h);
-	    	var value = parseFloat(sensors[s].history[h].value);
-	    	series.dataPoints.push({x: time, y: value});
-	    }
-	}
-
-	chart.render();
-    }
+    graphsource.update();
+    $interval(graphsource.update, 10000);
 });
 
-app.controller("humidityGraph", function($scope) {
+
+app.controller("humidityGraph", function($http, $interval, graphsource) {
+    var chart = _createGraph("chartContainer", 
+			     "Humidity History",
+			     function(){ chart.render(); });    
+    graphsource.create(chart,
+		       "/humidity/history", "Humidity_Average",
+		       "blue", $http);
+    graphsource.update();
+    $interval(graphsource.update, 10000);
 });
 
-app.controller("luminosityGraph", function($scope) {
+
+app.controller("luminosityGraph", function($http, $interval, graphsource) {
+    var chart = _createGraph("chartContainer", 
+			     "Luminosity History",
+			     function(){ chart.render(); });    
+    graphsource.create(chart, "/luminosity/history",
+		       "Luminosity_Average", "orange", $http);
+    graphsource.update();
+    $interval(graphsource.update, 10000);
 });
+
 
 function _createGraph(container, title, onItemClick) {
     return new CanvasJS.Chart(container, {
