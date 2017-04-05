@@ -91,26 +91,26 @@ def get_sensors(sensorType):
     return json.dumps(collection)
 
 @app.route("/static/chiara/<sensorType>_sensors")
-def get_temperature_sensors_page(sensorType):
+def get_sensors_page(sensorType):
 
     attr = {
         'temperature': {
             'title': "Temperature Sensor",
             'controller': "temperatureSensors",
             'icon': "fa-thermometer-three-quarters",
-            'graphPage': 'graph_temperature'
+            'graphPage': 'temperature_graph'
         },
         'humidity': {
             'title': "Humidity Sensor",
             'controller': "humiditySensorCtrl",
             'icon': "fa-tint",
-            'graphPage': 'graph_humidity'
+            'graphPage': 'humidity_graph'
         },
         'luminosity': {
             'title': "Luminosity Sensor",
             'controller': "luminositySensorCtrl",
             'icon': "fa-sun-o",
-            'graphPage': 'graph_luminosity'
+            'graphPage': 'luminosity_graph'
         }
     }
     
@@ -119,6 +119,32 @@ def get_temperature_sensors_page(sensorType):
                            controller=attr[sensorType]['controller'],
                            icon=attr[sensorType]['icon'],
                            graphPage=attr[sensorType]['graphPage'])
+
+@app.route("/static/chiara/<sensorType>_graph")
+def get_graph_page(sensorType):
+    attr = {
+        'temperature': {
+            'title': "Temperature Sensor Graph",
+            'controller': "temperatureGraph",
+            'sensorPage': 'temperature_sensors'
+        },
+        'humidity': {
+            'title': "Humidity Sensor",
+            'controller': "humidityGraph",
+            'sensorPage': 'humidity_sensors'
+        },
+        'luminosity': {
+            'title': "Luminosity Sensor",
+            'controller': "luminosityGraph",
+            'sensorPage': 'luminosity_sensors'
+        }
+    }
+    
+    return render_template("chiara/graph.html",
+                           title=attr[sensorType]['title'], 
+                           controller=attr[sensorType]['controller'],
+                           sensorPage=attr[sensorType]['sensorPage'])
+
 @app.route("/send")
 def send():
     print("Request on send")

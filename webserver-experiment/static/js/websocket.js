@@ -147,6 +147,12 @@ app.controller("temperatureGraph", function($scope, $http, $interval) {
     }
 });
 
+app.controller("humidityGraph", function($scope) {
+});
+
+app.controller("luminosityGraph", function($scope) {
+});
+
 function _createGraph(container, title, onItemClick) {
     return new CanvasJS.Chart(container, {
 	title: {
