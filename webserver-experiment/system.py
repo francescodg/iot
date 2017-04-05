@@ -71,6 +71,17 @@ class System:
         sensor['history'] = []
         m2m.clearHistory(sensor['uri'])
 
+    def getSensorsAverage(self, sensorType):
+        uri = {
+            'temperature': "/mn-cse/mn-name/GreenHouse/Temperature_Average",
+            'humidity': "/mn-cse/mn-name/GreenHouse/Humidity_Average",
+            'luminosity': "/mn-cse/mn-name/GreenHouse/Luminosity_Average"
+        }
+        if uri.has_key(sensorType):
+            return m2m.getSensorLastValue(uri[sensorType])
+        else:
+            return None
+
     def _findSensor(self, sensorType, sensorName):
         for sensor in self.sensors[sensorType]:
             if sensor['id'] == sensorName:

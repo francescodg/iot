@@ -88,6 +88,11 @@ def get_sensors(sensorType):
                 'lastValue': value})
     return json.dumps(collection)
 
+@app.route("/<sensorType>/average")
+def get_average(sensorType):
+    average = system.getSensorsAverage(sensorType)
+    return json.dumps({'average': average})
+
 @app.route("/static/chiara/<sensorType>_sensors")
 def get_sensors_page(sensorType):
 
