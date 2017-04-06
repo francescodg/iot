@@ -40,6 +40,10 @@ app.service('graphsource', function() {
     var color;
     var average;
     var http;
+    var averageSeries;
+    var averageSensor;
+    var avgMin = -1;
+    var avgMax = 0;
 
     this.create = function(_chart, _uri, _average, _color, _http) {
 	chart = _chart;
@@ -71,14 +75,20 @@ app.service('graphsource', function() {
 		if (sensors[s].id == average) {
 		    series = _createSeries(color);
 		    series.name = "Average"
+		    averageSeries = series;
+		    averageSensor = sensors[s];
 		} else {
 		    series = _createSeries("grey");
 		    series.name = sensors[s].id;
 		}
 		chart.options.data[s] = series;
 	    } else {
-		series = chart.options.data[s];
-		series.dataPoints = new Array();
+		if (sensors[s].id == average)
+		    averageSensor = sensors[s]
+		if (sensors[s].id != average) {
+		    series = chart.options.data[s];
+		    series.dataPoints = new Array();
+		}
 	    }
 
 	    // Sort timestamp
@@ -94,13 +104,29 @@ app.service('graphsource', function() {
 	    for (var h in history) {
 	    	var time =  parseInt(h);
 	    	var value = parseFloat(sensors[s].history[h].value);
-	    	series.dataPoints.push({x: time, y: value});
+		if (series)
+	    	    series.dataPoints.push({x: time, y: value});
 	    }
 	}
 
 	chart.render();
-    }
+	
+	if (averageSeries) {
+	    var value = averageSensor.history[0].value
+	    console.log(value)
+	    var newMin = chart.axisX[0].minimum
+	    var newMax = chart.axisX[0].maximum
+	    if (Math.abs(avgMin - newMin) > 0.5)
+		avgMin = newMin
+	    if (Math.abs(avgMax - newMax) > 0.5)
+		avgMax = newMax
+	    averageSeries.dataPoints = new Array()
+	    averageSeries.dataPoints.push({x: avgMin, y: value});
+	    averageSeries.dataPoints.push({x: avgMax, y: value});		 
+	}
 
+	chart.render();
+    }
 });
 
 app.controller("temperatureSensors", function($scope, $http, datasource) {

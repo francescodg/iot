@@ -86,6 +86,18 @@ def get_sensor_history(sensorType):
             collection.append({
                 'id': sensor['id'],
                 'history': sensor['history']})
+    average = {
+        'temperature': 'Temperature_Average',
+        'humidity': 'Humidity_Average',
+        'luminosity': 'Luminosity_Average'
+    }
+
+    value = system.getSensorsAverage(sensorType)
+    if value != None:
+        collection.append({
+            'id': average[sensorType],
+            'history': [{'time': 0, 'value': value}]
+        });
     return json.dumps(collection)
 
 @app.route("/<sensorType>/last")
