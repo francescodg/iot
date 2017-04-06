@@ -39,6 +39,9 @@ def subscribe():
     for sensor in system.sensors["luminosity"]:
         m2m.subscribe(sensor['uri'], "/luminosity/new")
         print("Subscribed to " + sensor['id'])
+    m2m.subscribe("/mn-cse/mn-name/GreenHouse/Temperature_Average", "/temperature/average/new")
+    m2m.subscribe("/mn-cse/mn-name/GreenHouse/Humidity_Average", "/humidity/average/new")
+    m2m.subscribe("/mn-cse/mn-name/GreenHouse/Luminosity_Average", "/luminosity/average/new")
     return
 
 def _processNotify(sensorType, request):
@@ -48,13 +51,19 @@ def _processNotify(sensorType, request):
         socketio.emit("new " + sensorType, {
             'id': sensorId,
             'value': value})
-        average = system.getSensorsAverage(sensorType)
-        if average != None:
-            socketio.emit('new {0} average'.format(sensorType), 
-                          {'data': average})
         return "", 202    
     except ValueError:
         return "", 202
+
+@app.route("/<sensorType>/average/new", methods=["POST"])
+def on_new_average_value(sensorType):    
+    try:
+        (_, value, _) = m2m.parseNotify(request.json)
+        socketio.emit('new {0} average'.format(sensorType), 
+                          {'data': value})
+    except ValueError:
+        pass
+    return "", 202
 
 @app.route("/<sensorType>/new", methods=["POST"])
 def on_new_value(sensorType):
