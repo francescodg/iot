@@ -279,11 +279,11 @@ app.controller("overviewCtrl", function($scope, $http, $timeout, socket){
     });
 
     function _updateScope(overview) {
-	$scope.averageTemperature = overview.averageTemperature;
-	$scope.averageHumidity = overview.averageHumidity;
-	$scope.averageLuminosity = overview.averageLuminosity;
-	$scope.boilerFuel = overview.boiler.fuel;
-	$scope.boilerPressure = overview.boiler.pressure;
+	$scope.averageTemperature = overview.averageTemperature
+	$scope.averageHumidity = overview.averageHumidity
+	$scope.averageLuminosity = overview.averageLuminosity
+	$scope.boilerFuel = overview.boiler.fuel
+	$scope.boilerPressure = overview.boiler.pressure
     }
 });
 

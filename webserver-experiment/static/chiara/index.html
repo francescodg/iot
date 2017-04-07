@@ -239,7 +239,7 @@
                          <i class="fa fa-thermometer-three-quarters fa-4x main-color" aria-hidden="true"></i>
                         <h4>Temperature</h4>
                         <p>
-                            {{ averageTemperature }} C°
+                            {{ averageTemperature.toFixed(2) }} C°
                         </p>
                     </div>
                 </div>
@@ -249,7 +249,7 @@
                          <i class="fa fa-bar-chart fa-4x main-color" aria-hidden="true"></i>
                         <h4>Pressure Boiler</h4>
                         <p>
-                            {{ boilerPressure }} PSI
+                            {{ boilerPressure.toFixed(2) }} PSI
                         </p>
                     </div>
                 </div>
@@ -258,7 +258,7 @@
                     <div >
                         <i class="fa fa-fire fa-4x main-color"></i>
                         <h4>Fuel Boiler</h4>
-                        <p> {{ boilerFuel }} %
+                        <p> {{ boilerFuel.toFixed(2) }} %
                         </p>
                     </div>
                 </div>
@@ -268,7 +268,7 @@
                         <i class="fa fa-tint fa-4x main-color"></i>
                         <h4>Humidity</h4>
                         <p>
-                            {{ averageHumidity }} %
+                            {{ averageHumidity.toFixed(2) }} %
                         </p>
                     </div>
                 </div>
@@ -278,7 +278,7 @@
                         <i class="fa fa-sun-o fa-4x main-color"></i>
                         <h4>Luminosity</h4>
                         <p>
-                            {{ averageLuminosity }} %
+                            {{ averageLuminosity.toFixed(2) }} %
                         </p>
                     </div>
                 </div>
@@ -475,7 +475,7 @@
 									<div>
 										<h4 class="text-center"><i class="fa fa-thermometer-three-quarters fa-2x main-color" aria-hidden="true"></i>&nbsp;Average Temperature</h4>
 										<p class="text-center">
-											{{ averageTemperature }} C°
+											{{ averageTemperature.toFixed(2) }} C°
 										</p>
 										<div style="margin-top: -1.7em">
 											<a href="temperature_sensors" class="btn btn-success">Thermometers List</a><br><br>
@@ -558,7 +558,7 @@
 									<div>
 										<h4 class="text-center"><i class="fa fa-tint fa-2x main-color" aria-hidden="true"></i>&nbsp;Average Humidity</h4>
 										<p class="text-center">
-											{{ averageHumidity }} %
+											{{ averageHumidity.toFixed(2) }} %
 										</p>
 									</div>
 									<div style="margin-top: -1.7em">
@@ -730,7 +730,7 @@
 									<div>
 										<h4 class="text-center"><i class="fa fa-sun-o fa-2x main-color" aria-hidden="true"></i>&nbsp;Average Luminosity</h4>
 										<p class="text-center">
-											{{ averageLuminosity }} %
+											{{ averageLuminosity.toFixed(2) }} %
 										</p>
 									</div>
 									<div style="margin-top: -1.7em">

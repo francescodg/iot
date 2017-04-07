@@ -56,7 +56,7 @@ def parseNotify(notify):
 		
 def getTemperatureSensors():
         sensors = {}
-        r = _getContainers("/mn-cse/mn-name/Temperature")
+        r = _getContainers("/mn-cse/mn-name/Temperature", "envsensor/temperature")
         if r.status_code == 200:
                 for sensorUri in r.json()['m2m:uril'].split():
                         key = sensorUri.split('/')[-1]
@@ -67,7 +67,7 @@ def getTemperatureSensors():
 
 def getHumiditySensors():
         sensors = {}
-	r = _getContainers("/mn-cse/mn-name/Humidity")
+	r = _getContainers("/mn-cse/mn-name/Humidity", "envsensor/humidity")
         if r.status_code == 200:
                 for sensorUri in r.json()['m2m:uril'].split():
                         key = sensorUri.split('/')[-1]
@@ -78,7 +78,7 @@ def getHumiditySensors():
 
 def getLuminositySensors():
         sensors = {}
-	r = _getContainers("/mn-cse/mn-name/Luminosity")
+	r = _getContainers("/mn-cse/mn-name/Luminosity", "envsensor/luminosity")
         if r.status_code == 200:
                 for sensorUri in r.json()['m2m:uril'].split():
                         key = sensorUri.split('/')[-1].\
@@ -129,11 +129,11 @@ def _getContentInstances(container):
                 params={'fu': 1, 'ty': 4, 'drt': 0})
         return r
 
-def _getContainers(ae):
+def _getContainers(ae, lbl=""):
         r = requests.get(
                 M2M_HOST + ae,
                 headers=_createHeader(),
-                params={'fu': 1, 'ty': 3})
+                params={'fu': 1, 'ty': 3, 'lbl': lbl})
         return r
 
 
