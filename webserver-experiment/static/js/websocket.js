@@ -280,10 +280,15 @@ app.controller("overviewCtrl", function($scope, $http, $timeout, socket){
 
     function _updateScope(overview) {
 	$scope.averageTemperature = overview.averageTemperature
+	    .toFixed(2)
 	$scope.averageHumidity = overview.averageHumidity
+	    .toFixed(2)
 	$scope.averageLuminosity = overview.averageLuminosity
+	    .toFixed(2)
 	$scope.boilerFuel = overview.boiler.fuel
+	    .toFixed(2)
 	$scope.boilerPressure = overview.boiler.pressure
+	    .toFixed(2)
     }
 });
 
@@ -298,19 +303,20 @@ app.controller("heatingCtrl", function($scope, $http, socket, $timeout){
 
     $http.get(WEBSERVER + '/temperature/average')
 	.then(function(response){
-	    var value = response.data.average;
-	    $scope.averageTemperature = value;
+	    var value = response.data.average;	    
+	    $scope.averageTemperature = value.toFixed(2);
 	    if (indicator) 
 	    	indicator.industrial(value);
 	});
 
     socket.on('new temperature average', function(obj) {
 	console.log('on new temperature average', obj.data)
+	var value = parseFloat(obj.data);
 	$timeout(function() {
-	    $scope.averageTemperature = obj.data;
+	    $scope.averageTemperature = value.toFixed(2);
 	}, 0);
 	if (indicator) 
-	    indicator.industrial(obj.data);
+	    indicator.industrial(value);
     });
 
     $scope.boilerPressure = Math.random() * 100;
@@ -329,18 +335,19 @@ app.controller("nebulizerCtrl", function($scope, $http, socket, $timeout){
     $http.get(WEBSERVER + '/humidity/average')
 	.then(function(response) {
 	    var value = response.data.average
-	    $scope.averageHumidity = value;
+	    $scope.averageHumidity = value.toFixed(2);
 	    if (indicator)
 		indicator.industrial(value)
 	});
 
     socket.on('new humidity average', function(obj) {	
 	console.log('on new humidity average', obj.data)
+	var value = parseFloat(obj.data);
 	$timeout(function() {
-	    $scope.averageHumidity = obj.data;
+	    $scope.averageHumidity = value.toFixed(2);
 	}, 0);
 	if (indicator) 
-	    indicator.industrial(obj.data);
+	    indicator.industrial(value);
     });
 }); 
 
@@ -355,17 +362,18 @@ app.controller("shadingCtrl", function($scope, $http, socket, $timeout){
     $http.get(WEBSERVER + '/luminosity/average')
 	.then(function(response) {
 	    var value = response.data.average;
-	    $scope.averageLuminosity = value;
+	    $scope.averageLuminosity = value.toFixed(2);
 	    if (indicator)
 		indicator.industrial(value)
 	});
 
     socket.on('new luminosity average', function (obj) {
 	console.log('on new luminosity average', obj.data)
+	var value = parseFloat(obj.data);
 	$timeout(function() {
-	    $scope.averageLuminosity = obj.data;
+	    $scope.averageLuminosity = value.toFixed(2);
 	}, 0);
 	if (indicator) 
-	    indicator.industrial(obj.data);
+	    indicator.industrial(value);
     });
 }); 
