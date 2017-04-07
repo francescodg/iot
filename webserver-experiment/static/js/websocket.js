@@ -130,14 +130,14 @@ app.service('graphsource', function() {
 });
 
 app.controller("temperatureSensors", function($scope, $http, datasource) {
-    datasource.register('temperature', $scope, $http)
-
+    datasource.register('temperature', $scope, $http)   
+    
     $scope.getCriticalLevel = function(value) {
-	if (value >= 10 && value <= 30)
+	if (value >= 18 && value <= 26)
 	    return "value-ok";
-	else if (value < 10)
+	else if (value >= -4 && value < 18 || value > 26 && value <= 32)
 	    return "value-warning";
-	else if (value > 30)
+	else if (value < -4 || value > 32)
 	    return "value-critical";
     }
     
@@ -149,13 +149,12 @@ app.controller("temperatureSensors", function($scope, $http, datasource) {
 app.controller("humiditySensorCtrl", function($scope, $http, datasource) {
     
     datasource.register("humidity", $scope, $http)
-
     $scope.getCriticalLevel = function(value) {
-	if (value >= 0.1 && value <= 0.6)
+	if (value >= 40 && value <= 65)
 	    return "value-ok";
-	else if (value < 0.1)
+	else if (value >= 20 && value < 40 || value > 65 && value <= 80)
 	    return "value-warning";
-	else if (value > 0.6)
+	else if (value < 20 || value > 80)
 	    return "value-critical";
     }
 
@@ -166,15 +165,14 @@ app.controller("humiditySensorCtrl", function($scope, $http, datasource) {
 
 
 app.controller("luminositySensorCtrl", function($scope, $http, datasource) {
-
     datasource.register("luminosity", $scope, $http)
 
     $scope.getCriticalLevel = function(value) {
-    	if (value >= 0.1 && value <= 0.6)
+    	if (value >= 25 && value <= 35)
     	    return "value-ok";
-    	else if (value < 0.1)
+    	else if (value >= 10 && value < 25 || value > 35 && value <= 55)
     	    return "value-warning";
-    	else if (value > 0.6)
+    	else if (value < 10 || value > 55)
     	    return "value-critical";
     }
 
@@ -298,7 +296,7 @@ app.controller("heatingCtrl", function($scope, $http, socket, $timeout){
 
     angular.element(function(){
 	indicator = $('#averageTemperatureIndicator');
-	indicator.industrial({})
+	indicator.industrial({low: 0, high: 40})
     });
 
     $http.get(WEBSERVER + '/temperature/average')
@@ -321,6 +319,28 @@ app.controller("heatingCtrl", function($scope, $http, socket, $timeout){
 
     $scope.boilerPressure = Math.random() * 100;
     $scope.boilerFuel = Math.random() * 100;
+
+    var pressureBoiler = {
+	min: -5,
+	max: 36,
+	unit: 'psi'
+    }
+
+    var fuelBoiler = {
+	min: 0,
+	max: 976,
+	unit: 'liters'
+    }
+
+    var temperatureBoiler = {
+	min: 10,
+	max: 40
+    }
+
+    $scope.setBoilerTemperature = function() {
+	console.log('clicked', $('#colorful').val())
+    }
+    
 });
 
 
@@ -329,7 +349,7 @@ app.controller("nebulizerCtrl", function($scope, $http, socket, $timeout){
 
     angular.element(function(){
 	indicator = $('#averageHumidityIndicator');
-	indicator.industrial({})
+	indicator.industrial({high: 85})
     });
 
     $http.get(WEBSERVER + '/humidity/average')
@@ -377,3 +397,22 @@ app.controller("shadingCtrl", function($scope, $http, socket, $timeout){
 	    indicator.industrial(value);
     });
 }); 
+
+app.controller("boilerCtrl", function($scope){
+    var pressureBoiler = {
+	min: -5,
+	max: 36,
+	unit: 'psi'
+    }
+
+    var fuelBoiler = {
+	min: 0,
+	max: 976,
+	unit: 'liters'
+    }
+
+    var temperatureBoiler = {
+	min: 10,
+	max: 40
+    }
+});

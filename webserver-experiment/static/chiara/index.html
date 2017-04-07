@@ -247,7 +247,7 @@
 				<div class="col-md-2 col-sm-2">
                     <div >
                          <i class="fa fa-bar-chart fa-4x main-color" aria-hidden="true"></i>
-                        <h4>Pressure Boiler</h4>
+                        <h4>Boiler Pressure</h4>
                         <p>
                             {{ boilerPressure }} PSI
                         </p>
@@ -257,7 +257,7 @@
                 <div class="col-md-2 col-sm-2">
                     <div >
                         <i class="fa fa-fire fa-4x main-color"></i>
-                        <h4>Fuel Boiler</h4>
+                        <h4>Boiler Fuel</h4>
                         <p> {{ boilerFuel }} %
                         </p>
                     </div>
@@ -423,7 +423,7 @@
 							<li class="main-price bottom">
 								<div class="row space-pad" style="margin-left: 1em">
 									<div class="col-md-4 col-sm-4"><b>
-										Boiler Temperature&nbsp;[C°]
+										Boiler Temperature&nbsp;[°C]
 									</b></div>
 									<div class="col-md-4 col-sm-4">
 										<!--<div class="example">
@@ -440,10 +440,10 @@
 										  </script>
 										</div>-->
 										<div style="width: 14.1em" class="form-group">
-											<input id="colorful" style="border-color: #27C00A; background-color: #e9fce8; height: 1.85em; font-size: 30px; font-family: '7segment'; font-style: bold" class="form-control" type="number" value="0" min="0" max="100" />
+											<input id="colorful" style="border-color: #27C00A; background-color: #e9fce8; height: 1.85em; font-size: 30px; font-family: '7segment'; font-style: bold" class="form-control" type="number" value="10" min="10" max="40" />
 										</div>
 									</div>
-									<a href="#contact-sec" style="width: 6em; height: 4em;" class="btn btn-success">
+									<a ng-click="setBoilerTemperature()" style="width: 6em; height: 4em;" class="btn btn-success">
 										<div style="padding: 0.8em">
 											Set
 										</div>
@@ -461,7 +461,7 @@
 								<div class="row text-center space-pad">
 									<div class="center-block">
 										<div >
-											<div id="averageTemperatureIndicator" class="industrial thermometer size one center-block"> <span class="ticks" data-amount="11" data-scale-freq="5"></span>
+											<div id="averageTemperatureIndicator" class="industrial thermometer size one center-block"> <span class="ticks" data-amount="16" data-scale-freq="5"></span>
 												<div class="space"></div>
 												<div class="meter safe"></div>
 											</div>
@@ -475,7 +475,7 @@
 									<div>
 										<h4 class="text-center"><i class="fa fa-thermometer-three-quarters fa-2x main-color" aria-hidden="true"></i>&nbsp;Average Temperature</h4>
 										<p class="text-center">
-											{{ averageTemperature }} C°
+											{{ averageTemperature }} °C
 										</p>
 										<div style="margin-top: -1.7em">
 											<a href="temperature_sensors" class="btn btn-success">Thermometers List</a><br><br>
@@ -678,12 +678,12 @@
 							      <script>
 							      $(document).ready(function() {
 							        $("#range-shader-0").asRange({
-												step: 0.1,
+												step: 10,
 												range: false,
 												min: 0,
-												max: 1,
+												max: 100,
 							      value: 0,
-							      onChange: function(value) { onShaderChangeValue(0, value); }
+							      onChange: function(value) { onShaderChangeValue(0, value / 100.0); }
 											  });
 											});
 							      </script>
@@ -693,12 +693,12 @@
 							      <script>
 							      $(document).ready(function() {
 							        $("#range-shader-1").asRange({
-												step: 0.1,
+												step: 10,
 												range: false,
 												min: 0,
-												max: 1,
+												max: 100,
 							      value: 0,
-							      onChange: function(value) { onShaderChangeValue(1, value); }
+							      onChange: function(value) { onShaderChangeValue(1, value / 100.0); }
 											  });
 											});
 							      </script>
