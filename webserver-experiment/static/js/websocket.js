@@ -338,7 +338,9 @@ app.controller("heatingCtrl", function($scope, $http, socket, $timeout){
     }
 
     $scope.setBoilerTemperature = function() {
-	console.log('clicked', $('#colorful').val())
+	var value = $('#colorful').val();
+	console.log('clicked', value)
+	$http.post(WEBSERVER + "/boiler", value)
     }
     
 });
@@ -374,9 +376,32 @@ app.controller("nebulizerCtrl", function($scope, $http, socket, $timeout){
 app.controller("shadingCtrl", function($scope, $http, socket, $timeout){
     var indicator;
 
-    angular.element(function(){
+    angular.element(function(){	
 	indicator = $('#averageLuminosityIndicator');
 	indicator.industrial({})
+	$("#range-shader-1").asRange({					
+	    step: 10,
+	    range: false,
+	    min: 0,
+	    max: 100,
+	    value: 0,
+	    onChange: function(value) {
+		onShaderChangeValue(1, value / 100.0);
+		$http.post(WEBSERVER + '/shader?id=1', value)
+	    }
+	});
+	
+	$("#range-shader-0").asRange({
+	    step: 10,
+	    range: false,
+	    min: 0,
+	    max: 100,
+	    value: 0,
+	    onChange: function(value) {
+		onShaderChangeValue(0, value / 100.0); 
+		$http.post(WEBSERVER + '/shader?id=0', value)
+	    }
+	});	
     });
 
     $http.get(WEBSERVER + '/luminosity/average')

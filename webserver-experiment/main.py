@@ -171,6 +171,19 @@ def get_graph_page(sensorType):
                            controller=attr[sensorType]['controller'],
                            sensorPage=attr[sensorType]['sensorPage'])
 
+@app.route('/boiler', methods=["POST"])
+def set_boiler_temperature():
+    value = request.data
+    print("Boiler: value = {0}".format(value))
+    return "", 200
+
+@app.route('/shader', methods=["POST"])
+def set_shader_opening():
+    shaderId = request.args["id"]
+    value = request.data
+    print("id = {0}, value = {1}".format(shaderId, value))
+    return "", 200
+
 @app.route("/send")
 def send():
     print("Request on send")

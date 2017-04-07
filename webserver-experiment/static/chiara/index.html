@@ -676,31 +676,13 @@
 							    <div class="col-md-6">
 							      <div id="range-shader-0" style="width: 14.5em; margin-top: 2em; margin-left: 7em;"></div>
 							      <script>
-							      $(document).ready(function() {
-							        $("#range-shader-0").asRange({
-												step: 10,
-												range: false,
-												min: 0,
-												max: 100,
-							      value: 0,
-							      onChange: function(value) { onShaderChangeValue(0, value / 100.0); }
-											  });
-											});
+		
 							      </script>
 							    </div>
 							    <div class="col-md-6">
 							      <div id="range-shader-1" style="width: 14.5em; margin-top: 2em; margin-left: 7em;"></div>
 							      <script>
-							      $(document).ready(function() {
-							        $("#range-shader-1").asRange({
-												step: 10,
-												range: false,
-												min: 0,
-												max: 100,
-							      value: 0,
-							      onChange: function(value) { onShaderChangeValue(1, value / 100.0); }
-											  });
-											});
+							      
 							      </script>
 							    </div>
 							  </div>
@@ -821,9 +803,10 @@
 
 
 	  function init() {
-	  window.setTimeout(start, 500)
+	  // window.setTimeout(start, 500)
 	  // $(window).on("load", start);
-	  // $(document).ready(start)
+	  $(document).ready(start)
+	  
 	  }
 
 	  function start() {
