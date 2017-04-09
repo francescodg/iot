@@ -20,6 +20,7 @@
     	<script src="../libs/js/jquery-3.2.1.min.js"></script>
 	<script src="../libs/js/angular.min.js"></script>
 	<script src="../libs/js/socket.io.min.js"></script>
+	<script src="../libs/js/preloadjs-0.6.2.min.js"></script>
 	<script src="../js/websocket.js"></script>
 
 	<script src="../js/easeljs-0.8.2.min.js"></script>
@@ -95,7 +96,7 @@
     <![endif]-->
 </head>
 
-<body onload="init()">	
+<body>	
     <header>
 		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 			<div class="container">
@@ -258,7 +259,7 @@
                     <div >
                         <i class="fa fa-fire fa-4x main-color"></i>
                         <h4>Boiler Fuel</h4>
-                        <p> {{ boilerFuel }} %
+                        <p> {{ boilerFuel }} L
                         </p>
                     </div>
                 </div>
@@ -413,7 +414,7 @@
 										<div >
 											<h4 class="text-center"><i class="fa fa-fire fa-2x main-color"></i>&nbsp;Fuel Boiler</h4>
 											<p class="text-center">
-												{{ boilerFuel }} Liters
+												{{ boilerFuel }} L
 											</p>
 										</div>
 									</div>
@@ -800,23 +801,6 @@
 		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
 		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 	  })();
-
-
-	  function init() {
-	  // window.setTimeout(start, 500)
-	  // $(window).on("load", start);
-	  $(document).ready(start)
-	  
-	  }
-
-	  function start() {
-	  	// humidityPlant = new HumidityPlant()
-      	  	// humidityPlant.init("humidityPlant")
-	      	// humidityPlant.update()
-
-	  	shaderPlant = new ShaderPlant("shaderPlant")
-	  	shaderPlant.update()
-	  }
 
 	  function onShaderChangeValue(id, value) {
 	  	shaderPlant.shaders[id].setOpening(value)

@@ -372,19 +372,20 @@ app.controller("heatingCtrl", function($scope, $http, socket, $timeout){
 
 app.controller("nebulizerCtrl", function($scope, $http, socket, $timeout){
     var indicator;
-    var humidityPlant;
 
     angular.element(function(){
+	plantInit(function() {
+	    	humidityPlant.callback = function(id, status) {
+		    var value = status ? 'on' : 'off';
+		    $http.post(WEBSERVER + "/sprinkler?id=" + id, value)
+		}
+	})
+
 	indicator = $('#averageHumidityIndicator');
 	indicator.industrial({high: 85})
 
-	humidityPlant = new HumidityPlant()
-      	humidityPlant.init("humidityPlant")
-	humidityPlant.update()
-	humidityPlant.callback = function(id, status) {
-	    var value = status ? 'on' : 'off';
-	    $http.post(WEBSERVER + "/sprinkler?id=" + id, value)
-	}
+	// humidityPlant = new HumidityPlant()
+	// humidityPlant.update()
     });
 
     $http.get(WEBSERVER + '/humidity/average')

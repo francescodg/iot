@@ -1,9 +1,40 @@
+var assets;
+var humidityPlant;
+var shaderPlant;
+
+function plantInit(callback) {
+    var preload = new createjs.LoadQueue(true);
+    preload.on("progress", function(){ console.log("Loading...") } );
+    preload.on("complete", function(event){ console.log("Done."); onComplete(event.target, callback); });
+    preload.addEventListener("error", function(){ console.log("Error loading assets"); });
+    preload.loadManifest(["assets/img/Serra_iot.png", "assets/water_on.png", "assets/water_off.png", "assets/window.png", "assets/shutter.png"])
+}
+
+function onComplete(queue, callback) {
+    assets = {
+	"background": queue.getResult("assets/img/Serra_iot.png"),
+	"water_on": queue.getResult("assets/water_on.png"),
+	"water_off": queue.getResult("assets/water_off.png"),
+	"window": queue.getResult("assets/window.png"),
+	"shutters": queue.getResult("assets/shutter.png")
+    }
+
+    humidityPlant = new HumidityPlant("humidityPlant")
+    humidityPlant.init("humidityPlant")
+    humidityPlant.update()
+    
+    shaderPlant = new ShaderPlant("shaderPlant")
+    shaderPlant.update()
+
+    callback();
+}
+
 function Shader() {
     var $ = this;
     $.status = 100;
 
-    var window = new createjs.Bitmap("assets/window.png");
-    $.shutters = new createjs.Bitmap("assets/shutter.png");
+    var window = new createjs.Bitmap(assets.window);
+    $.shutters = new createjs.Bitmap(assets.shutters);
 
     $.shutters.x += 0.2; // Needed for graphics, do not change
 
@@ -28,7 +59,7 @@ function Led() {
     $.status = false;
     
     var data = {
-	images: ["assets/water_off.png", "assets/water_on.png"],
+	images: [assets.water_off, assets.water_on],
 	frames: {width: 360, height: 280},
 	animations: {
 	    off: 0,
@@ -76,7 +107,7 @@ function HumidityPlant() {
 
     this.init = function(id) {
 	$.stage = new createjs.Stage(id);
-	$.stage.addChild(new createjs.Bitmap("assets/img/Serra_iot.png"))
+	$.stage.addChild(new createjs.Bitmap(assets.background))
 	$.leds = [new Led(), new Led(), new Led(), new Led()]
 
 	for (var led in $.leds)
@@ -120,7 +151,7 @@ function ShaderPlant(id) {
     var $ = this;
 
     $.stage = new createjs.Stage(id);
-    $.stage.addChild(new createjs.Bitmap("assets/img/Serra_iot.png"))
+    $.stage.addChild(new createjs.Bitmap(assets.background))
 
     $.shaders = [new Shader(), new Shader()]
 
