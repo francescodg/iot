@@ -366,7 +366,7 @@
 								<div class="row text-center space-pad">
 									<div class="col-md-4 col-sm-4">
 										<div>
-											<div class="industrial led size four center-block">
+											<div id="boilerStatusIndicator" class="industrial led size four center-block">
 												<div class="meter red"></div>
 											</div>
 										</div>
@@ -374,7 +374,7 @@
 									
 									<div class="col-md-4 col-sm-4">
 										<div>
-											<div class="industrial gauge size one center-block"><span class="ticks" data-amount="21" data-scale-freq="5"></span>
+											<div id="boilerPressureIndicator" class="industrial gauge size one center-block"><span class="ticks" data-amount="21" data-scale-freq="5"></span>
 												<div class="space"></div>
 												<div class="meter"></div>
 											</div>
@@ -383,7 +383,7 @@
 									
 									<div class="col-md-4 col-sm-4">
 										<div >
-											<div class="industrial tank size one center-block"> <span class="ticks" data-amount="11" data-scale-freq="5"></span>
+											<div id="boilerFuelIndicator" class="industrial tank size one center-block"> <span class="ticks" data-amount="11" data-scale-freq="5"></span>
 												<div class="space"></div>
 												<div class="meter safe"></div>
 											</div>
@@ -413,7 +413,7 @@
 										<div >
 											<h4 class="text-center"><i class="fa fa-fire fa-2x main-color"></i>&nbsp;Fuel Boiler</h4>
 											<p class="text-center">
-												{{ boilerFuel }} %
+												{{ boilerFuel }} Liters
 											</p>
 										</div>
 									</div>

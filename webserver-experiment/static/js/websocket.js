@@ -293,10 +293,19 @@ app.controller("overviewCtrl", function($scope, $http, $timeout, socket){
 
 app.controller("heatingCtrl", function($scope, $http, socket, $timeout){
     var indicator;
+    var boilerStatusIndicator;
+    var boilerFuelIndicator;
 
     angular.element(function(){
 	indicator = $('#averageTemperatureIndicator');
 	indicator.industrial({low: 0, high: 40})
+	boilerStatusIndicator = $("#boilerStatusIndicator");
+	boilerPressureIndicator = $("#boilerPressureIndicator");
+	boilerFuelIndicator = $("#boilerFuelIndicator");
+
+	boilerPressureIndicator.industrial({low: 0, high: 40})
+	boilerFuelIndicator.industrial({low: 0, high: 980})
+	boilerStatusIndicator.industrial({})
     });
 
     $http.get(WEBSERVER + '/temperature/average')
@@ -305,6 +314,22 @@ app.controller("heatingCtrl", function($scope, $http, socket, $timeout){
 	    $scope.averageTemperature = value.toFixed(2);
 	    if (indicator) 
 	    	indicator.industrial(value);
+	});
+
+    $http.get(WEBSERVER + '/boiler')
+	.then(function(response) {
+	    var pressure = response.data.pressure;
+	    var fuel = response.data.fuel;
+	    var status = response.data.status;
+
+	    console.log(pressure, fuel, status)
+
+	    boilerStatusIndicator.industrial(status)
+	    boilerPressureIndicator.industrial(pressure)
+	    boilerFuelIndicator.industrial(fuel)
+
+	    $scope.boilerPressure = pressure;
+	    $scope.boilerFuel = fuel;
 	});
 
     socket.on('new temperature average', function(obj) {
@@ -317,9 +342,6 @@ app.controller("heatingCtrl", function($scope, $http, socket, $timeout){
 	    indicator.industrial(value);
     });
 
-    $scope.boilerPressure = Math.random() * 100;
-    $scope.boilerFuel = Math.random() * 100;
-
     var pressureBoiler = {
 	min: -5,
 	max: 36,
@@ -330,11 +352,6 @@ app.controller("heatingCtrl", function($scope, $http, socket, $timeout){
 	min: 0,
 	max: 976,
 	unit: 'liters'
-    }
-
-    var temperatureBoiler = {
-	min: 10,
-	max: 40
     }
 
     $scope.setBoilerTemperature = function() {

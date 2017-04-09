@@ -102,7 +102,11 @@ def getSensorHistory(sensorUri, host=M2M_MN):
 def getSensorLastValue(sensorUri):
         r = _getLastValue(sensorUri)        
         if r.status_code == 200:
-                return float(r.json()["m2m:cin"]["con"])
+                data = r.json()["m2m:cin"]["con"]
+                try:
+                        return float(data)
+                except ValueError:
+                        return data
         else:
                 return None
 

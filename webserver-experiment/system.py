@@ -98,6 +98,16 @@ class System:
         uri = self._getUriById(self.shaders, shader)
         if uri:
             print("SetShaderOpening", m2m.setValue(uri, value))
+
+    def getBoilerState(self):
+        fuel = m2m.getSensorLastValue('/mn-cse/mn-name/Temperature/Boiler_Fuel_Level')
+        pressure = m2m.getSensorLastValue('/mn-cse/mn-name/Temperature/Boiler_Pressure')
+        status = m2m.getSensorLastValue('/mn-cse/mn-name/Temperature/Boiler_Status')
+
+        print(fuel, pressure, status)
+
+        statusStr = True if status == "ON" else False
+        return {'status': statusStr, 'pressure': pressure, 'fuel': fuel}
             
     def setBoilerTemperature(self, value):
         print("Set boiler temperature", value)

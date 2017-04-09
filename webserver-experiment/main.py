@@ -171,8 +171,11 @@ def get_graph_page(sensorType):
                            controller=attr[sensorType]['controller'],
                            sensorPage=attr[sensorType]['sensorPage'])
 
-@app.route('/boiler', methods=["POST"])
+@app.route('/boiler', methods=["GET", "POST"])
 def set_boiler_temperature():
+    if request.method == "GET":
+        boilerState = system.getBoilerState()
+        return json.dumps(boilerState)
     value = request.data
     system.setBoilerTemperature(value)    
     return "", 200
