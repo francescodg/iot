@@ -174,7 +174,7 @@ def get_graph_page(sensorType):
 @app.route('/boiler', methods=["POST"])
 def set_boiler_temperature():
     value = request.data
-    print("Boiler: value = {0}".format(value))
+    system.setBoilerTemperature(value)    
     return "", 200
 
 @app.route('/shader', methods=["POST"])

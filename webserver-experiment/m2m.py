@@ -114,6 +114,14 @@ def getShaders():
                         shaders.append(uri)
         return shaders
 
+def getBoiler():
+        boiler = None
+        r = _getContainers("", "actuator/temperature", 
+                           M2M_IN + '/in-cse')
+        if r.status_code == 200:
+                boiler = r.json()["m2m:uril"].split()[0]
+        return boiler
+
 def setValue(uri, value):
 	body = {'m2m:cin': {'con': value}}
 	r = requests.post(

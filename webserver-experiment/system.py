@@ -13,7 +13,9 @@ class System:
             "luminosity": self.luminositySensors
         }        
         self.shaders = m2m.getShaders()
+        self.boiler = m2m.getBoiler()
         print("Shaders", self.shaders)
+        print("Boiler", self.boiler)
 
 
     def retrieveSensorsHistory(self):
@@ -97,7 +99,13 @@ class System:
                 uri = s
                 break
         if uri:
-            m2m.setValue(uri, value)
+            print("SetShaderOpening", m2m.setValue(uri, value))
+            
+    def setBoilerTemperature(self, value):
+        print("Set boiler temperature", value)
+        if self.boiler:
+            print(m2m.setValue(self.boiler, value))
+        
 
     def random(self):
         pass
