@@ -1,7 +1,8 @@
 import requests
 import json
 
-M2M_HOST = "http://127.0.0.1:8282/~"
+M2M_MN = "http://127.0.0.1:8282/~"
+M2M_IN = "http://127.0.0.1:8080/~"
 	
 def delete(uri):
 	headers = {
@@ -9,34 +10,25 @@ def delete(uri):
 	}
 	return requests.delete(uri, headers=headers)
 
-def clearHistory(uri):
+def clearHistory(uri, host=M2M_MN):
         r = _getContentInstances(uri)
         contentInstances = r.json()["m2m:uril"].split()
         for contentInstance in contentInstances:
-                delete(M2M_HOST + contentInstance)
+                delete(host + contentInstance)
 	
-def subscribe(resource, notificationUri):
+def subscribe(resource, notificationUri, host=M2M_MN):
 	notificationUri = "http://localhost:5000" + notificationUri
-        uri = M2M_HOST + resource
+        uri = host + resource
         r = _subscribe(uri, notificationUri, "PythonMonitor")
         
 	if r.status_code == 409:
 		delete(uri + "/PythonMonitor")
 		r = _subscribe(uri, notificationUri, "PythonMonitor")
         return r.status_code
-
-	uri = "http://127.0.0.1:8282/~/mn-cse/mn-name" + resource
-	notificationUri = "http://localhost:5000" + notificationUri	
-	r = _subscribe(uri, notificationUri, "PythonMonitor")	
-	if r.status_code == 409:
-		delete(uri + "/PythonMonitor")
-		r = _subscribe(uri, notificationUri, "PythonMonitor")
-	return r.status_code
-
 	
-def getResourceNameById(identifier):
+def getResourceNameById(identifier, host=M2M_MN):
 	headers = _createHeader()
-	r = requests.get(M2M_HOST + identifier, headers=headers)
+	r = requests.get(host + identifier, headers=headers)
 	return r.json()["m2m:cnt"]["rn"]	
 
 	
@@ -87,7 +79,7 @@ def getLuminositySensors():
                         sensors.update({key: value})        
         return sensors
 
-def getSensorHistory(sensorUri):
+def getSensorHistory(sensorUri, host=M2M_MN):
         history = []
         r = _getContentInstances(sensorUri)
 
@@ -97,7 +89,7 @@ def getSensorHistory(sensorUri):
                         return history
                 for contentInstanceUri in uris.split():
                         r = requests.get(
-                                M2M_HOST + contentInstanceUri,
+                                host + contentInstanceUri,
                                 headers=_createHeader())
                         value = r.json()["m2m:cin"]["con"]
                         timestamp = r.json()["m2m:cin"]["ct"]
@@ -113,25 +105,42 @@ def getSensorLastValue(sensorUri):
                 return float(r.json()["m2m:cin"]["con"])
         else:
                 return None
+def getShaders():
+        shaders = []
+        r = _getContainers("", "actuator/luminosity", 
+                           M2M_IN + '/in-cse')
+        if r.status_code == 200:
+                for uri in r.json()["m2m:uril"].split():
+                        shaders.append(uri)
+        return shaders
 
+def setValue(uri, value):
+	body = {'m2m:cin': {'con': value}}
+	r = requests.post(
+                M2M_IN + uri,
+                headers=_createHeader(
+                        contentType='application/json;ty=4'),
+                json=body)
+        return r
+        
 
-def _getLastValue(container):
+def _getLastValue(container, host=M2M_MN):
         r = requests.get(
-                M2M_HOST + container + '/la',
+                host + container + '/la',
                 headers=_createHeader())
         return r
 
 
-def _getContentInstances(container):
+def _getContentInstances(container, host=M2M_MN):
         r = requests.get(
-                M2M_HOST + container,
+                host + container,
                 headers=_createHeader(),
                 params={'fu': 1, 'ty': 4, 'drt': 0})
         return r
 
-def _getContainers(ae, lbl=""):
+def _getContainers(ae, lbl="", host=M2M_MN):
         r = requests.get(
-                M2M_HOST + ae,
+                host + ae,
                 headers=_createHeader(),
                 params={'fu': 1, 'ty': 3, 'lbl': lbl})
         return r

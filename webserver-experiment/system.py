@@ -11,7 +11,9 @@ class System:
             "temperature": self.temperatureSensors,
             "humidity": self.humiditySensors,
             "luminosity": self.luminositySensors
-        }
+        }        
+        self.shaders = m2m.getShaders()
+        print("Shaders", self.shaders)
 
 
     def retrieveSensorsHistory(self):
@@ -86,6 +88,16 @@ class System:
         for sensor in self.sensors[sensorType]:
             if sensor['id'] == sensorName:
                 return sensor
+
+    def setShaderOpening(self, shaderId, value):
+        shader = "Shader_" + shaderId
+        uri = None
+        for s in self.shaders:
+            if shader == s.split("/")[-1]:
+                uri = s
+                break
+        if uri:
+            m2m.setValue(uri, value)
 
     def random(self):
         pass

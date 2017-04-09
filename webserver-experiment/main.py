@@ -181,7 +181,7 @@ def set_boiler_temperature():
 def set_shader_opening():
     shaderId = request.args["id"]
     value = request.data
-    print("id = {0}, value = {1}".format(shaderId, value))
+    system.setShaderOpening(shaderId, value)    
     return "", 200
 
 @app.route("/send")
