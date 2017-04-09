@@ -184,6 +184,12 @@ def set_shader_opening():
     system.setShaderOpening(shaderId, value)    
     return "", 200
 
+@app.route('/sprinkler', methods=["POST"])
+def set_sprinkler_status():
+    sprinklerId = request.args["id"]
+    status = request.data
+    system.setSprinklerStatus(sprinklerId, status)
+    return "", 200
 @app.route("/send")
 def send():
     print("Request on send")

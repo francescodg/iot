@@ -105,22 +105,15 @@ def getSensorLastValue(sensorUri):
                 return float(r.json()["m2m:cin"]["con"])
         else:
                 return None
-def getShaders():
-        shaders = []
-        r = _getContainers("", "actuator/luminosity", 
+
+def getActuators(lbl):
+        actuators = []
+        r = _getContainers("", lbl, 
                            M2M_IN + '/in-cse')
         if r.status_code == 200:
                 for uri in r.json()["m2m:uril"].split():
-                        shaders.append(uri)
-        return shaders
-
-def getBoiler():
-        boiler = None
-        r = _getContainers("", "actuator/temperature", 
-                           M2M_IN + '/in-cse')
-        if r.status_code == 200:
-                boiler = r.json()["m2m:uril"].split()[0]
-        return boiler
+                        actuators.append(uri)
+        return actuators
 
 def setValue(uri, value):
 	body = {'m2m:cin': {'con': value}}

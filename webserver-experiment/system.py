@@ -12,10 +12,12 @@ class System:
             "humidity": self.humiditySensors,
             "luminosity": self.luminositySensors
         }        
-        self.shaders = m2m.getShaders()
-        self.boiler = m2m.getBoiler()
+        self.shaders = m2m.getActuators("actuator/luminosity")
+        self.boiler = m2m.getActuators("actuator/temperature")[0]
+        self.sprinklers = m2m.getActuators("actuator/humidity")
         print("Shaders", self.shaders)
         print("Boiler", self.boiler)
+        print("Sprinklers", self.sprinklers)
 
 
     def retrieveSensorsHistory(self):
@@ -93,11 +95,7 @@ class System:
 
     def setShaderOpening(self, shaderId, value):
         shader = "Shader_" + shaderId
-        uri = None
-        for s in self.shaders:
-            if shader == s.split("/")[-1]:
-                uri = s
-                break
+        uri = self._getUriById(self.shaders, shader)
         if uri:
             print("SetShaderOpening", m2m.setValue(uri, value))
             
@@ -105,7 +103,18 @@ class System:
         print("Set boiler temperature", value)
         if self.boiler:
             print(m2m.setValue(self.boiler, value))
+
+    def setSprinklerStatus(self, sprinklerId, status):
+        sprinkler = "Sprinkler_" + sprinklerId
+        uri = self._getUriById(self.sprinklers, sprinkler)
+        if uri:
+            print("SprinklerUri", m2m.setValue(uri, status.upper()))
         
+    def _getUriById(self, uris, resource):
+        for s in uris:
+            if resource == s.split("/")[-1]:
+                return s
+        return None
 
     def random(self):
         pass
