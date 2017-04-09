@@ -42,6 +42,9 @@ def subscribe():
     m2m.subscribe("/mn-cse/mn-name/GreenHouse/Temperature_Average", "/temperature/average/new")
     m2m.subscribe("/mn-cse/mn-name/GreenHouse/Humidity_Average", "/humidity/average/new")
     m2m.subscribe("/mn-cse/mn-name/GreenHouse/Luminosity_Average", "/luminosity/average/new")
+    m2m.subscribe('/mn-cse/mn-name/Temperature/Boiler_Fuel_Level', '/boiler/state/new')
+    m2m.subscribe('/mn-cse/mn-name/Temperature/Boiler_Pressure', '/boiler/state/new')
+    m2m.subscribe('/mn-cse/mn-name/Temperature/Boiler_Status', '/boiler/state/new')
     return
 
 def _processNotify(sensorType, request):
@@ -174,11 +177,25 @@ def get_graph_page(sensorType):
 @app.route('/boiler', methods=["GET", "POST"])
 def set_boiler_temperature():
     if request.method == "GET":
-        boilerState = system.getBoilerState()
-        return json.dumps(boilerState)
+        return json.dumps(system.boilerState)
     value = request.data
     system.setBoilerTemperature(value)    
     return "", 200
+
+@app.route('/boiler/state/new', methods=["POST"])
+def on_new_boiler_state():
+    if request.json['m2m:sgn'].has_key('nev'):
+        descriptor = request.json['m2m:sgn']['nev']['rep']['cnf']
+        value = request.json['m2m:sgn']['nev']['rep']['con']        
+        print(descriptor, value)
+        if descriptor == "Temperature.Boiler_Fuel_Level.Value":
+            system.boilerState['fuel'] = value
+        elif descriptor == "Temperature.Boiler_Pressure.Value":
+            system.boilerState['pressure'] = value
+        elif descriptor == "Temperature.Boiler_Status.Value":
+            system.boilerState['status'] = (value == 'ON')
+        socketio.emit('new boiler state', system.boilerState)
+    return "", 201
 
 @app.route('/shader', methods=["POST"])
 def set_shader_opening():

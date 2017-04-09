@@ -276,16 +276,21 @@ app.controller("overviewCtrl", function($scope, $http, $timeout, socket){
 	    });
     });
 
+    socket.on("new boiler state", function(data) {
+	var pressure = parseFloat(data.pressure);
+	var fuel = parseFloat(data.fuel);
+	$timeout(function() {
+	    $scope.boilerFuel = fuel.toFixed(2)
+	    $scope.boilerPressure = pressure.toFixed(2)
+	}, 0);
+    });
+
     function _updateScope(overview) {
 	$scope.averageTemperature = overview.averageTemperature
 	    .toFixed(2)
 	$scope.averageHumidity = overview.averageHumidity
 	    .toFixed(2)
 	$scope.averageLuminosity = overview.averageLuminosity
-	    .toFixed(2)
-	$scope.boilerFuel = overview.boiler.fuel
-	    .toFixed(2)
-	$scope.boilerPressure = overview.boiler.pressure
 	    .toFixed(2)
     }
 });
@@ -316,21 +321,23 @@ app.controller("heatingCtrl", function($scope, $http, socket, $timeout){
 	    	indicator.industrial(value);
 	});
 
-    $http.get(WEBSERVER + '/boiler')
-	.then(function(response) {
-	    var pressure = response.data.pressure;
-	    var fuel = response.data.fuel;
-	    var status = response.data.status;
+    socket.on('new boiler state', function(obj) {
+	console.log('on new boiler state', obj)
 
-	    console.log(pressure, fuel, status)
+	var pressure = obj.pressure;
+	var fuel = obj.fuel;
+	var status = obj.status;
 
-	    boilerStatusIndicator.industrial(status)
-	    boilerPressureIndicator.industrial(pressure)
-	    boilerFuelIndicator.industrial(fuel)
+	boilerStatusIndicator.industrial(status)
+	boilerPressureIndicator.industrial(pressure)
+	boilerFuelIndicator.industrial(fuel)
 
+	$timeout(function() {
 	    $scope.boilerPressure = pressure;
 	    $scope.boilerFuel = fuel;
-	});
+	}, 0);
+	
+    });
 
     socket.on('new temperature average', function(obj) {
 	console.log('on new temperature average', obj.data)

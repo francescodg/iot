@@ -18,6 +18,7 @@ class System:
         print("Shaders", self.shaders)
         print("Boiler", self.boiler)
         print("Sprinklers", self.sprinklers)
+        self.boilerState = self._getBoilerState()
 
 
     def retrieveSensorsHistory(self):
@@ -99,7 +100,11 @@ class System:
         if uri:
             print("SetShaderOpening", m2m.setValue(uri, value))
 
-    def getBoilerState(self):
+    @property
+    def boilerState(self):
+        return self.boilerState
+
+    def _getBoilerState(self):
         fuel = m2m.getSensorLastValue('/mn-cse/mn-name/Temperature/Boiler_Fuel_Level')
         pressure = m2m.getSensorLastValue('/mn-cse/mn-name/Temperature/Boiler_Pressure')
         status = m2m.getSensorLastValue('/mn-cse/mn-name/Temperature/Boiler_Status')
