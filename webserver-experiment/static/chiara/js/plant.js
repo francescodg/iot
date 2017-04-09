@@ -66,7 +66,7 @@ function Led() {
     this.onClickListener = function(callback) {
 	$.button.addEventListener("click", function(event) {
 	    $.toggle()
-	    callback()
+	    callback(event)
 	});
     }
 }
@@ -102,12 +102,16 @@ function HumidityPlant() {
 	    $.leds[led].update()
 	$.stage.update()
     }
+    
+    this.callback = null;
 
     function initLed(i) {
 	var led = $.leds[i]
 	$.stage.addChild(led.button)
-	led.onClickListener(function() {
+	led.onClickListener(function(event) {
 	    $.update()
+	    if ($.callback)
+		$.callback(i, led.status);
 	});
     }
 }

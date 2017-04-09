@@ -190,6 +190,7 @@ def set_sprinkler_status():
     status = request.data
     system.setSprinklerStatus(sprinklerId, status)
     return "", 200
+
 @app.route("/send")
 def send():
     print("Request on send")
