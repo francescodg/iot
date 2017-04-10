@@ -12,18 +12,6 @@ socketio = SocketIO(app)
 
 system = system.System()
 
-# TODO Deprecated
-def _sensorsFromType(sensorType):
-    if sensorType == 'temperature':
-        sensors = system.temperatureSensors
-    elif sensorType == 'luminosity':
-        sensors = system.luminositySensors
-    elif sensorType == 'humidity':
-        sensors = system.humiditySensors
-    else:
-        sensors = []
-    return sensors
-
 def start():
     thread.start_new_thread(system.retrieveSensorsHistory, ())
     thread.start_new_thread(subscribe, ())
@@ -221,13 +209,6 @@ def send():
 def get_overview():
     return system.overview
 
-def timer():
-  # socketio.emit("new temperature", random.randint(0, 100))
-  # socketio.emit("new average temperature", random.randint(0, 100))
-  socketio.emit("new overview", system.overview)
-  threading.Timer(5, timer).start()
-
 if __name__ == "__main__":
-    # timer()
     start()
     socketio.run(app, debug=True, use_reloader=False) # To disable duplicate output (use_reloader=False)

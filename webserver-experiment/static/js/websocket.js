@@ -276,6 +276,27 @@ app.controller("overviewCtrl", function($scope, $http, $timeout, socket){
 	    });
     });
 
+    socket.on('new temperature average', function(obj) {
+	var value = parseFloat(obj.data);
+	$timeout(function() {
+	    $scope.averageTemperature = value.toFixed(2);
+	}, 0);
+    });
+
+    socket.on('new humidity average', function(obj) {	
+	var value = parseFloat(obj.data);
+	$timeout(function() {
+	    $scope.averageHumidity = value.toFixed(2);
+	}, 0);
+    });
+
+    socket.on('new luminosity average', function (obj) {
+	var value = parseFloat(obj.data);
+	$timeout(function() {
+	    $scope.averageLuminosity = value.toFixed(2);
+	}, 0);
+    });
+
     socket.on("new boiler state", function(data) {
 	var pressure = parseFloat(data.pressure);
 	var fuel = parseFloat(data.fuel);
@@ -348,18 +369,6 @@ app.controller("heatingCtrl", function($scope, $http, socket, $timeout){
 	if (indicator) 
 	    indicator.industrial(value);
     });
-
-    var pressureBoiler = {
-	min: -5,
-	max: 36,
-	unit: 'psi'
-    }
-
-    var fuelBoiler = {
-	min: 0,
-	max: 976,
-	unit: 'liters'
-    }
 
     $scope.setBoilerTemperature = function() {
 	var value = $('#colorful').val();
