@@ -2,30 +2,56 @@ var assets;
 var humidityPlant;
 var shaderPlant;
 
-function plantInit(callback) {
+function humidityPlantInit(callback) {
     var preload = new createjs.LoadQueue(true);
-    preload.on("progress", function(){ console.log("Loading...") } );
-    preload.on("complete", function(event){ console.log("Done."); onComplete(event.target, callback); });
-    preload.addEventListener("error", function(){ console.log("Error loading assets"); });
-    preload.loadManifest(["assets/img/Serra_iot.png", "assets/water_on.png", "assets/water_off.png", "assets/window.png", "assets/shutter.png"])
+    preload.on("progress", function() {
+	console.log("Loading Humidity Plant ...") 
+    });
+    preload.on("complete", function(event) {
+	console.log("Humidity Plant Done."); 
+	onHumidityPlantComplete(event.target, callback); 
+    });
+    preload.addEventListener("error", function() { 
+	console.log("Error loading assets."); 
+    });
+    preload.loadManifest(["assets/img/Serra_iot.png", "assets/water_on.png", "assets/water_off.png"])
 }
 
-function onComplete(queue, callback) {
+function shadingPlantInit(callback) {
+    var preload = new createjs.LoadQueue(true);
+    preload.on("progress", function() {
+	console.log("Loading Shading Plant ...") 
+    });
+    preload.on("complete", function(event) {
+	console.log("Done."); 
+	onShadingPlantComplete(event.target, callback); 
+    });
+    preload.addEventListener("error", function(){ 
+	console.log("Error loading assets."); 
+    });
+    preload.loadManifest(["assets/img/Serra_iot.png", "assets/window.png", "assets/shutter.png"])
+}
+
+function onHumidityPlantComplete(queue, callback) {
     assets = {
 	"background": queue.getResult("assets/img/Serra_iot.png"),
 	"water_on": queue.getResult("assets/water_on.png"),
 	"water_off": queue.getResult("assets/water_off.png"),
-	"window": queue.getResult("assets/window.png"),
-	"shutters": queue.getResult("assets/shutter.png")
     }
-
     humidityPlant = new HumidityPlant("humidityPlant")
     humidityPlant.init("humidityPlant")
     humidityPlant.update()
-    
+    callback();
+}
+
+function onShadingPlantComplete(queue, callback) {
+    assets = {
+	"background": queue.getResult("assets/img/Serra_iot.png"),
+	"window": queue.getResult("assets/window.png"),
+	"shutters": queue.getResult("assets/shutter.png")
+    }    
     shaderPlant = new ShaderPlant("shaderPlant")
     shaderPlant.update()
-
     callback();
 }
 
@@ -144,6 +170,12 @@ function HumidityPlant() {
 	    if ($.callback)
 		$.callback(i, led.status);
 	});
+    }
+
+    this.setSprinkler = function (i, status) {
+	var led = $.leds[i];
+	led.status = status;
+	$.update();
     }
 }
 

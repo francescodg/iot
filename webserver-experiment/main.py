@@ -91,14 +91,27 @@ def get_sensor_history(sensorType):
         });
     return json.dumps(collection)
 
-@app.route("/<sensorType>/last")
-def get_sensors(sensorType):
-    collection = []
-    for sensor in system.sensors[sensorType]:
-        value = system.getLastValue(sensor)
+@app.route("/<containerType>/last")
+def get_last_value(containerType):
+    collection = []    
+    if system.sensors.has_key(containerType):
+        containers = system.sensors[containerType]
+    elif system.actuators.has_key(containerType):
+        containers = system.actuators[containerType]
+    else:
+        containers = []
+
+    print("Containers", containers)
+
+    for container in containers:
+        value = system.getLastValue(container)
+        
+        print("ContainerURI", container['uri'])
+        print("Value", value)
+
         if value != None:
             collection.append({
-                'id': sensor['id'], 
+                'id': container['id'], 
                 'lastValue': value})
     return json.dumps(collection)
 

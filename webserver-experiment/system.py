@@ -11,7 +11,17 @@ class System:
             "temperature": self.temperatureSensors,
             "humidity": self.humiditySensors,
             "luminosity": self.luminositySensors
-        }        
+        }
+        self.actuators = {
+            "sprinklers": [
+                {"id": "Sprinkler_0", "uri": "/in-cse/in-name/Controller/Sprinkler_0"},
+                {"id": "Sprinkler_1", "uri": "/in-cse/in-name/Controller/Sprinkler_1"},
+                {"id": "Sprinkler_2", "uri": "/in-cse/in-name/Controller/Sprinkler_2"},
+                {"id": "Sprinkler_3", "uri": "/in-cse/in-name/Controller/Sprinkler_3"}],
+            "shaders": [
+                {"id": "Shader_0", "uri": "/in-cse/in-name/Controller/Shader_0"},
+                {"id": "Shader_1", "uri": "/in-cse/in-name/Controller/Shader_1"}]
+        }
         self.shaders = m2m.getActuators("actuator/luminosity")
         self.boiler = m2m.getActuators("actuator/temperature")[0]
         self.sprinklers = m2m.getActuators("actuator/humidity")

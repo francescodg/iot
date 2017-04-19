@@ -382,19 +382,26 @@ app.controller("heatingCtrl", function($scope, $http, socket, $timeout){
 app.controller("nebulizerCtrl", function($scope, $http, socket, $timeout){
     var indicator;
 
-    angular.element(function(){
-	plantInit(function() {
-	    	humidityPlant.callback = function(id, status) {
-		    var value = status ? 'on' : 'off';
-		    $http.post(WEBSERVER + "/sprinkler?id=" + id, value)
-		}
+    angular.element(function() {	
+	humidityPlantInit(function() {
+	    $http.get(WEBSERVER + '/sprinklers/last')
+		.then(function(response) {
+		    var sprinklers = response.data;
+		    for (s in sprinklers) {
+			var id = sprinklers[s]["id"].split("_")[1];
+			var status = sprinklers[s]["lastValue"];
+			humidityPlant.setSprinkler(id, status);
+		    }
+		});
+
+	    humidityPlant.callback = function(id, status) {
+		var value = status ? 'on' : 'off';
+		$http.post(WEBSERVER + "/sprinkler?id=" + id, value)
+	    }
 	})
 
 	indicator = $('#averageHumidityIndicator');
 	indicator.industrial({high: 85})
-
-	// humidityPlant = new HumidityPlant()
-	// humidityPlant.update()
     });
 
     $http.get(WEBSERVER + '/humidity/average')
@@ -418,34 +425,51 @@ app.controller("nebulizerCtrl", function($scope, $http, socket, $timeout){
 
 app.controller("shadingCtrl", function($scope, $http, socket, $timeout){
     var indicator;
+    var shadersValue = [0, 0];
 
-    angular.element(function(){	
+    angular.element(function(){
 	indicator = $('#averageLuminosityIndicator');
 	indicator.industrial({})
-	$("#range-shader-1").asRange({					
+	shadingPlantInit(function() {
+	    $http.get(WEBSERVER + "/shaders/last")
+		.then(function(response) {
+		    _init(response.data)
+		});
+	});
+    });
+
+    function _init(shaders) {
+	for (s in shaders) {
+	    var id = shaders[s]["id"].split("_")[1];
+	    var value = shaders[s]["lastValue"];
+	    shadersValue[id] = value;
+	    onShaderChangeValue(id, value / 100.0);
+	}
+
+	$("#range-shader-1").asRange({				
 	    step: 10,
 	    range: false,
 	    min: 0,
 	    max: 100,
-	    value: 0,
+	    value: shadersValue[1],
 	    onChange: function(value) {
 		onShaderChangeValue(1, value / 100.0);
 		$http.post(WEBSERVER + '/shader?id=1', value)
 	    }
 	});
-	
+		
 	$("#range-shader-0").asRange({
 	    step: 10,
 	    range: false,
 	    min: 0,
 	    max: 100,
-	    value: 0,
+	    value: shadersValue[0],
 	    onChange: function(value) {
 		onShaderChangeValue(0, value / 100.0); 
 		$http.post(WEBSERVER + '/shader?id=0', value)
 	    }
-	});	
-    });
+	});
+    }
 
     $http.get(WEBSERVER + '/luminosity/average')
 	.then(function(response) {
@@ -464,23 +488,4 @@ app.controller("shadingCtrl", function($scope, $http, socket, $timeout){
 	if (indicator) 
 	    indicator.industrial(value);
     });
-}); 
-
-app.controller("boilerCtrl", function($scope){
-    var pressureBoiler = {
-	min: -5,
-	max: 36,
-	unit: 'psi'
-    }
-
-    var fuelBoiler = {
-	min: 0,
-	max: 976,
-	unit: 'liters'
-    }
-
-    var temperatureBoiler = {
-	min: 10,
-	max: 40
-    }
 });
