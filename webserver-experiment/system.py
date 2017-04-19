@@ -12,19 +12,13 @@ class System:
             "humidity": self.humiditySensors,
             "luminosity": self.luminositySensors
         }
-        self.actuators = {
-            "sprinklers": [
-                {"id": "Sprinkler_0", "uri": "/in-cse/in-name/Controller/Sprinkler_0"},
-                {"id": "Sprinkler_1", "uri": "/in-cse/in-name/Controller/Sprinkler_1"},
-                {"id": "Sprinkler_2", "uri": "/in-cse/in-name/Controller/Sprinkler_2"},
-                {"id": "Sprinkler_3", "uri": "/in-cse/in-name/Controller/Sprinkler_3"}],
-            "shaders": [
-                {"id": "Shader_0", "uri": "/in-cse/in-name/Controller/Shader_0"},
-                {"id": "Shader_1", "uri": "/in-cse/in-name/Controller/Shader_1"}]
-        }
         self.shaders = m2m.getActuators("actuator/luminosity")
         self.boiler = m2m.getActuators("actuator/temperature")[0]
         self.sprinklers = m2m.getActuators("actuator/humidity")
+        self.actuators = {
+            "sprinklers": self._retrieveActuators("sprinklers"),
+            "shaders": self._retrieveActuators("shaders")
+        }
         print("Shaders", self.shaders)
         print("Boiler", self.boiler)
         print("Sprinklers", self.sprinklers)
@@ -39,6 +33,17 @@ class System:
         for sensor in self.humiditySensors:
             sensor['history'] = m2m.getSensorHistory(sensor['uri'])
 
+    def _retrieveActuators(self, actuatorType):
+        actuators = []
+        if actuatorType == "shaders":
+            for shaderUri in self.shaders:
+                shaderId = shaderUri.split('/')[-1]
+                actuators.append({"id": shaderId, "uri": shaderUri})
+        elif actuatorType == "sprinklers":
+            for sprinklerUri in self.sprinklers:
+                sprinklerId = sprinklerUri.split('/')[-1]                
+                actuators.append({"id": sprinklerId, "uri": sprinklerUri})
+        return actuators
 
     def _retrieveSensors(self, sensorType):
         sensors = []
@@ -58,7 +63,6 @@ class System:
                 'lastValue': m2m.getSensorLastValue(sensorUris[s])
             })
         return sensors
-
 
     # TODO Deprecated    
     def __getLastValue(self, sensorType):
