@@ -174,7 +174,7 @@ function HumidityPlant() {
 
     this.setSprinkler = function (i, status) {
 	var led = $.leds[i];
-	led.status = status;
+	led.status = (status == "ON");
 	$.update();
     }
 }

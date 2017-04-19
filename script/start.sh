@@ -1,5 +1,6 @@
-#!/usr/bin
+#!/usr/bin/bash
 
-sh start-cooja &
-sh start-mn.sh &
-sh start-in.sh
+cd ~/Desktop/iot/script/
+sh start-cooja.sh &
+eclipse &
+sh start-tunslip.sh
